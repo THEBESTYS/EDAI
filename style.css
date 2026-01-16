@@ -1,0 +1,610 @@
+/* 기본 스타일 리셋 및 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 헤더 스타일 */
+.header {
+    background: linear-gradient(135deg, #1a5fb4 0%, #2c8cff 100%);
+    color: white;
+    padding: 1.2rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.logo span {
+    font-weight: 400;
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.nav {
+    display: flex;
+    gap: 25px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 진행 단계 표시기 */
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 2.5rem 0;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background-color: #e0e0e0;
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-number {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+    border: 4px solid white;
+    box-shadow: 0 0 0 2px #e0e0e0;
+}
+
+.step.active .step-number {
+    background-color: #2c8cff;
+    color: white;
+    box-shadow: 0 0 0 2px #2c8cff;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    text-align: center;
+    color: #777;
+    font-weight: 500;
+    max-width: 100px;
+}
+
+.step.active .step-label {
+    color: #2c8cff;
+    font-weight: 600;
+}
+
+/* 단계 콘텐츠 */
+.step-content {
+    display: none;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.step-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.step-header h2 {
+    color: #1a5fb4;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.step-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* 버튼 스타일 */
+.btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.prev-btn {
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+.prev-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.next-btn {
+    background-color: #2c8cff;
+    color: white;
+}
+
+.next-btn:hover {
+    background-color: #1a5fb4;
+}
+
+.analyze-btn {
+    background-color: #22c55e;
+    color: white;
+}
+
+.analyze-btn:hover {
+    background-color: #16a34a;
+}
+
+.analyze-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.ed-link-btn {
+    background-color: #8b5cf6;
+    color: white;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.cta-primary {
+    background-color: #2c8cff;
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 15px 30px;
+}
+
+.cta-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    padding: 15px 30px;
+}
+
+.cta-tertiary {
+    background-color: transparent;
+    color: #2c8cff;
+    border: 2px solid #2c8cff;
+    padding: 13px 30px;
+}
+
+/* Step 1: ED School 정보 */
+.ed-school-info {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2.5rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.ed-logo img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ed-description h3 {
+    color: #1a5fb4;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.ed-description ul {
+    margin: 1rem 0 1.5rem 1.5rem;
+}
+
+.ed-description li {
+    margin-bottom: 0.5rem;
+}
+
+/* Step 2: 스피킹 맥스 지침 */
+.speaking-instructions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.instruction-card {
+    background-color: #f8fafc;
+    border-radius: 10px;
+    padding: 1.8rem;
+    border-left: 5px solid #2c8cff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.instruction-icon {
+    font-size: 2.5rem;
+    color: #2c8cff;
+    margin-bottom: 1rem;
+}
+
+.instruction-card h3 {
+    color: #1a5fb4;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.instruction-card ol, .instruction-card ul {
+    padding-left: 1.2rem;
+}
+
+.instruction-card li {
+    margin-bottom: 0.7rem;
+}
+
+.sample-recording {
+    background-color: #f0f7ff;
+    border-radius: 10px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.sample-recording h3 {
+    color: #1a5fb4;
+    margin-bottom: 1rem;
+}
+
+.audio-note {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.8rem;
+    font-style: italic;
+}
+
+/* Step 3: 업로드 영역 */
+.upload-area {
+    border: 3px dashed #b3d4ff;
+    border-radius: 12px;
+    padding: 3.5rem 2rem;
+    text-align: center;
+    background-color: #f8fbff;
+    margin-bottom: 2rem;
+    transition: all 0.3s;
+}
+
+.upload-area:hover, .upload-area.dragover {
+    border-color: #2c8cff;
+    background-color: #f0f7ff;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: #2c8cff;
+    margin-bottom: 1rem;
+}
+
+.upload-area h3 {
+    color: #1a5fb4;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+}
+
+.upload-area p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.upload-btn {
+    background-color: #2c8cff;
+    color: white;
+}
+
+.file-info {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background-color: #e8f4ff;
+    border-radius: 8px;
+    display: none;
+}
+
+.file-info.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+.upload-requirements {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.upload-requirements h3 {
+    color: #1a5fb4;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-requirements ul {
+    margin: 1rem 0 1.5rem 1.5rem;
+}
+
+.privacy-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #e8f4ff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+.privacy-notice i {
+    color: #2c8cff;
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+/* Step 4: AI 분석 진행 */
+.analysis-progress, .analysis-result {
+    margin-bottom: 2.5rem;
+}
+
+.progress-bar {
+    height: 12px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2c8cff, #22c55e);
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.progress-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.stat-label {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1a5fb4;
+}
+
+/* 결과 카드 */
+.result-card {
+    background: linear-gradient(135deg, #f8fbff 0%, #e8f4ff 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 2px solid #b3d4ff;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #d1e7ff;
+}
+
+.ed-level-badge {
+    background-color: #2c8cff;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.level-name {
+    font-size: 1.3rem;
+}
+
+.level-desc {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.result-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-item {
+    text-align: center;
+    padding: 1.2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.result-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.result-value {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.cefr-b1 {
+    color: #f59e0b;
+    background-color: #fef3c7;
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.result-notice {
+    background-color: #fff8e6;
+    border-left: 5px solid #f59e0b;
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.result-notice p {
+    margin: 0;
+    color: #856404;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* 세부 분석 */
+.detailed-analysis {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.analysis-item {
+    padding: 1.2rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.analysis-label {
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #333;
+}
+
+.analysis-score {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-bar {
+    flex-grow: 1;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2c8cff, #8b5cf6);
+    border-radius
