@@ -5,6 +5,7 @@ let mediaRecorder = null;
 let audioChunks = [];
 let recordingTimer = null;
 let recordingSeconds = 0;
+let isRecording = false;
 
 // DOM이 로드되면 실행
 document.addEventListener('DOMContentLoaded', function() {
@@ -19,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 페이지 로드 시 첫 번째 단계 활성화
     goToStep(1);
+    
+    // 버튼 호버 효과
+    setupButtonEffects();
 });
 
 // 모바일 환경 최적화
@@ -33,45 +37,111 @@ function optimizeForMobile() {
         document.getElementById('fileUploadSection').style.display = 'none';
         
         // 모바일 가이드 표시
-        document.getElementById('mobileGuide').style.display = 'block';
+        const mobileGuide = document.getElementById('mobileGuide');
+        if (mobileGuide) mobileGuide.style.display = 'block';
         
         // 터치 이벤트 최적화
         document.addEventListener('touchstart', function(e) {
-            if (e.target.tagName === 'BUTTON') {
-                e.target.classList.add('touch-active');
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                btn.classList.add('touch-active');
             }
         }, { passive: true });
         
         document.addEventListener('touchend', function(e) {
-            if (e.target.tagName === 'BUTTON') {
-                e.target.classList.remove('touch-active');
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                btn.classList.remove('touch-active');
             }
         }, { passive: true });
     }
 }
 
+// 버튼 효과 설정
+function setupButtonEffects() {
+    // 모든 버튼에 호버 효과 추가
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.classList.add('hover-effect');
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.classList.remove('hover-effect');
+        });
+    });
+}
+
 // 단계 이동 함수
 function goToStep(stepNumber) {
     // 현재 활성화된 단계 비활성화
-    document.querySelector(`.step-content.active`).classList.remove('active');
-    document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+    const currentActive = document.querySelector('.step-content.active');
+    if (currentActive) {
+        currentActive.classList.remove('active');
+        currentActive.classList.add('fade-out');
+        
+        setTimeout(() => {
+            currentActive.classList.remove('fade-out');
+        }, 300);
+    }
+    
+    const currentStepElement = document.querySelector(`.step[data-step="${currentStep}"]`);
+    if (currentStepElement) {
+        currentStepElement.classList.remove('active');
+    }
     
     // 새로운 단계 활성화
-    document.getElementById(`step-${stepNumber}`).classList.add('active');
-    document.querySelector(`.step[data-step="${stepNumber}"]`).classList.add('active');
+    const newStep = document.getElementById(`step-${stepNumber}`);
+    if (newStep) {
+        newStep.classList.add('fade-in');
+        setTimeout(() => {
+            newStep.classList.remove('fade-in');
+            newStep.classList.add('active');
+        }, 50);
+    }
+    
+    const newStepElement = document.querySelector(`.step[data-step="${stepNumber}"]`);
+    if (newStepElement) {
+        newStepElement.classList.add('active');
+    }
     
     // Step 4(분석)로 이동할 때 AI 분석 시뮬레이션 시작
     if (stepNumber === 4 && uploadedFile) {
-        simulateAnalysis();
+        setTimeout(() => {
+            simulateAnalysis();
+        }, 500);
     }
     
     // Step 5로 이동할 때 결과 표시
     if (stepNumber === 5) {
-        displayFinalResults();
+        setTimeout(() => {
+            displayFinalResults();
+        }, 500);
     }
     
     currentStep = stepNumber;
     scrollToTop();
+    
+    // 시각적 효과: 단계 변경 시 하이라이트
+    highlightCurrentStep();
+}
+
+// 현재 단계 하이라이트
+function highlightCurrentStep() {
+    const stepContents = document.querySelectorAll('.step-content');
+    stepContents.forEach(content => {
+        content.classList.remove('highlighted');
+    });
+    
+    const currentContent = document.getElementById(`step-${currentStep}`);
+    if (currentContent) {
+        setTimeout(() => {
+            currentContent.classList.add('highlighted');
+            setTimeout(() => {
+                currentContent.classList.remove('highlighted');
+            }, 1000);
+        }, 300);
+    }
 }
 
 // 파일 업로드 설정
@@ -91,6 +161,12 @@ function setupFileUpload() {
             document.getElementById('directRecordingSection').style.display = 'none';
             toggleUploadBtn.classList.add('active');
             toggleRecordBtn.classList.remove('active');
+            
+            // 시각적 효과
+            this.classList.add('clicked');
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 300);
         });
     }
     
@@ -100,6 +176,12 @@ function setupFileUpload() {
             document.getElementById('directRecordingSection').style.display = 'block';
             toggleRecordBtn.classList.add('active');
             toggleUploadBtn.classList.remove('active');
+            
+            // 시각적 효과
+            this.classList.add('clicked');
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 300);
         });
     }
     
@@ -107,30 +189,46 @@ function setupFileUpload() {
     if (fileSelectBtn) {
         fileSelectBtn.addEventListener('click', function() {
             fileInput.click();
+            
+            // 시각적 효과
+            this.classList.add('clicked');
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 300);
         });
     }
     
     // 파일 선택 시
-    fileInput.addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            handleFileSelection(e.target.files[0]);
-        }
-    });
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+    }
     
     // 드래그 앤 드롭 (PC용)
     if (uploadArea) {
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
-            uploadArea.classList.add('dragover');
+            this.classList.add('dragover');
+            this.classList.add('drag-highlight');
         });
         
         uploadArea.addEventListener('dragleave', function() {
-            uploadArea.classList.remove('dragover');
+            this.classList.remove('dragover');
+            this.classList.remove('drag-highlight');
         });
         
         uploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
-            uploadArea.classList.remove('dragover');
+            this.classList.remove('dragover');
+            this.classList.remove('drag-highlight');
+            this.classList.add('drop-success');
+            
+            setTimeout(() => {
+                this.classList.remove('drop-success');
+            }, 1000);
             
             if (e.dataTransfer.files.length > 0) {
                 handleFileSelection(e.dataTransfer.files[0]);
@@ -148,6 +246,15 @@ function setupFileUpload() {
         
         if (!validation.valid) {
             showFileError(validation.error);
+            
+            // 오류 시 시각적 효과
+            if (uploadArea) {
+                uploadArea.classList.add('shake-error');
+                setTimeout(() => {
+                    uploadArea.classList.remove('shake-error');
+                }, 500);
+            }
+            
             return;
         }
         
@@ -159,8 +266,35 @@ function setupFileUpload() {
             showFileSuccess(processedFile);
             
             // 분석 버튼 활성화
-            analyzeBtn.disabled = false;
-            analyzeBtn.innerHTML = `<i class="fas fa-robot"></i> ${processedFile.name} 분석 시작`;
+            if (analyzeBtn) {
+                analyzeBtn.disabled = false;
+                analyzeBtn.classList.add('ready-to-analyze');
+                analyzeBtn.innerHTML = `
+                    <div class="btn-content">
+                        <div class="btn-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="btn-text">
+                            <div class="btn-title">AI 분석 시작</div>
+                            <div class="btn-subtitle">${processedFile.name}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // 성공 시 시각적 효과
+                analyzeBtn.classList.add('pulse-success');
+                setTimeout(() => {
+                    analyzeBtn.classList.remove('pulse-success');
+                }, 1500);
+            }
+            
+            // 업로드 영역 성공 효과
+            if (uploadArea) {
+                uploadArea.classList.add('upload-success');
+                setTimeout(() => {
+                    uploadArea.classList.remove('upload-success');
+                }, 2000);
+            }
             
         }).catch(error => {
             showFileError(`파일 처리 오류: ${error.message}`);
@@ -286,25 +420,32 @@ function showFileSuccess(file) {
     const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
     const fileType = file.type ? file.type.split('/')[1].toUpperCase() : file.name.split('.').pop().toUpperCase();
     
-    fileInfo.innerHTML = `
-        <div class="file-success">
-            <div class="file-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="file-details">
-                <div class="file-name">${file.name}</div>
-                <div class="file-meta">
-                    <span class="file-size">${fileSizeMB} MB</span>
-                    <span class="file-type">${fileType}</span>
-                    <span class="file-status">✓ 업로드 준비 완료</span>
+    if (fileInfo) {
+        fileInfo.innerHTML = `
+            <div class="file-success">
+                <div class="file-icon">
+                    <i class="fas fa-check-circle"></i>
                 </div>
+                <div class="file-details">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-meta">
+                        <span class="file-size">${fileSizeMB} MB</span>
+                        <span class="file-type">${fileType}</span>
+                        <span class="file-status">✓ 업로드 준비 완료</span>
+                    </div>
+                </div>
+                <button onclick="removeFile()" class="btn-remove">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <button onclick="removeFile()" class="btn-remove">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `;
-    fileInfo.classList.add('show');
+        `;
+        fileInfo.classList.add('show');
+        fileInfo.classList.add('success-animation');
+        
+        setTimeout(() => {
+            fileInfo.classList.remove('success-animation');
+        }, 1000);
+    }
     
     // 오류 메시지 숨기기
     const errorDiv = document.getElementById('fileError');
@@ -344,6 +485,11 @@ function showFileError(message) {
         </div>
     `;
     errorDiv.style.display = 'block';
+    errorDiv.classList.add('error-animation');
+    
+    setTimeout(() => {
+        errorDiv.classList.remove('error-animation');
+    }, 500);
     
     // 파일 정보 숨기기
     const fileInfo = document.getElementById('fileInfo');
@@ -355,6 +501,7 @@ function showFileError(message) {
     const analyzeBtn = document.getElementById('analyzeBtn');
     if (analyzeBtn) {
         analyzeBtn.disabled = true;
+        analyzeBtn.classList.remove('ready-to-analyze');
     }
 }
 
@@ -364,10 +511,30 @@ function setupDirectRecording() {
     const stopBtn = document.getElementById('stopRecordingBtn');
     const recordTimer = document.getElementById('recordTimer');
     const recordingStatus = document.getElementById('recordingStatus');
+    const recordingIndicator = document.querySelector('.recording-indicator');
     
     if (!startBtn) return;
     
+    // 마이크 상태 확인 애니메이션
+    startBtn.addEventListener('mouseenter', function() {
+        if (!isRecording) {
+            this.classList.add('mic-ready');
+        }
+    });
+    
+    startBtn.addEventListener('mouseleave', function() {
+        this.classList.remove('mic-ready');
+    });
+    
     startBtn.addEventListener('click', async function() {
+        if (isRecording) return;
+        
+        // 시각적 효과
+        this.classList.add('recording-clicked');
+        setTimeout(() => {
+            this.classList.remove('recording-clicked');
+        }, 300);
+        
         try {
             // 마이크 권한 요청
             const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -386,6 +553,7 @@ function setupDirectRecording() {
             
             audioChunks = [];
             recordingSeconds = 0;
+            isRecording = true;
             
             // 데이터 수집
             mediaRecorder.ondataavailable = (event) => {
@@ -394,10 +562,16 @@ function setupDirectRecording() {
             
             // 녹음 완료
             mediaRecorder.onstop = () => {
+                isRecording = false;
                 saveRecording();
                 
                 // 스트림 해제
                 stream.getTracks().forEach(track => track.stop());
+                
+                // 녹음 완료 효과
+                if (recordingIndicator) {
+                    recordingIndicator.classList.remove('recording-active');
+                }
             };
             
             // 녹음 시작
@@ -405,20 +579,43 @@ function setupDirectRecording() {
             
             // UI 업데이트
             startBtn.style.display = 'none';
-            recordingStatus.style.display = 'flex';
+            if (recordingStatus) {
+                recordingStatus.style.display = 'flex';
+                recordingStatus.classList.add('recording-active');
+            }
+            
+            // 녹음 인디케이터 활성화
+            if (recordingIndicator) {
+                recordingIndicator.classList.add('recording-active');
+            }
             
             // 타이머 시작
-            recordTimer.textContent = '00:00';
+            if (recordTimer) {
+                recordTimer.textContent = '00:00';
+                recordTimer.classList.add('timer-active');
+            }
+            
             recordingTimer = setInterval(() => {
                 recordingSeconds++;
                 const minutes = Math.floor(recordingSeconds / 60);
                 const seconds = recordingSeconds % 60;
-                recordTimer.textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                if (recordTimer) {
+                    recordTimer.textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    // 10초마다 시각적 효과
+                    if (recordingSeconds % 10 === 0) {
+                        recordTimer.classList.add('timer-pulse');
+                        setTimeout(() => {
+                            recordTimer.classList.remove('timer-pulse');
+                        }, 500);
+                    }
+                }
             }, 1000);
             
         } catch (error) {
             console.error('녹음 오류:', error);
+            isRecording = false;
             
             let errorMessage = '마이크 접근 권한이 필요합니다.';
             if (error.name === 'NotAllowedError') {
@@ -426,6 +623,12 @@ function setupDirectRecording() {
             } else if (error.name === 'NotFoundError') {
                 errorMessage = '마이크를 찾을 수 없습니다. 마이크가 연결되어 있는지 확인해주세요.';
             }
+            
+            // 오류 시 시각적 효과
+            startBtn.classList.add('recording-error');
+            setTimeout(() => {
+                startBtn.classList.remove('recording-error');
+            }, 1000);
             
             showFileError(errorMessage);
         }
@@ -436,13 +639,27 @@ function setupDirectRecording() {
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 
+                // 시각적 효과
+                this.classList.add('stop-clicked');
+                setTimeout(() => {
+                    this.classList.remove('stop-clicked');
+                }, 300);
+                
                 // UI 업데이트
-                startBtn.style.display = 'block';
-                recordingStatus.style.display = 'none';
+                if (startBtn) startBtn.style.display = 'block';
+                if (recordingStatus) {
+                    recordingStatus.style.display = 'none';
+                    recordingStatus.classList.remove('recording-active');
+                }
                 
                 // 타이머 정지
                 if (recordingTimer) {
                     clearInterval(recordingTimer);
+                }
+                
+                // 타이머 비활성화
+                if (recordTimer) {
+                    recordTimer.classList.remove('timer-active');
                 }
             }
         });
@@ -475,7 +692,33 @@ function saveRecording() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     if (analyzeBtn) {
         analyzeBtn.disabled = false;
-        analyzeBtn.innerHTML = `<i class="fas fa-robot"></i> 녹음 파일 분석 시작`;
+        analyzeBtn.classList.add('ready-to-analyze');
+        analyzeBtn.innerHTML = `
+            <div class="btn-content">
+                <div class="btn-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="btn-text">
+                    <div class="btn-title">AI 분석 시작</div>
+                    <div class="btn-subtitle">녹음 파일 분석</div>
+                </div>
+            </div>
+        `;
+        
+        // 성공 시 시각적 효과
+        analyzeBtn.classList.add('pulse-success');
+        setTimeout(() => {
+            analyzeBtn.classList.remove('pulse-success');
+        }, 1500);
+    }
+    
+    // 녹음 성공 효과
+    const recordingControls = document.querySelector('.recording-controls');
+    if (recordingControls) {
+        recordingControls.classList.add('recording-success');
+        setTimeout(() => {
+            recordingControls.classList.remove('recording-success');
+        }, 2000);
     }
 }
 
@@ -493,6 +736,11 @@ function removeFile() {
     const fileInfo = document.getElementById('fileInfo');
     if (fileInfo) {
         fileInfo.classList.remove('show');
+        fileInfo.classList.add('fade-out');
+        setTimeout(() => {
+            fileInfo.classList.remove('fade-out');
+            fileInfo.innerHTML = '';
+        }, 300);
     }
     
     // 오류 메시지 숨기기
@@ -505,13 +753,33 @@ function removeFile() {
     const analyzeBtn = document.getElementById('analyzeBtn');
     if (analyzeBtn) {
         analyzeBtn.disabled = true;
-        analyzeBtn.innerHTML = `<i class="fas fa-robot"></i> AI 분석 시작`;
+        analyzeBtn.classList.remove('ready-to-analyze');
+        analyzeBtn.innerHTML = `
+            <div class="btn-content">
+                <div class="btn-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="btn-text">
+                    <div class="btn-title">AI 분석 시작</div>
+                    <div class="btn-subtitle">파일을 먼저 업로드해주세요</div>
+                </div>
+            </div>
+        `;
     }
     
     // 디버그 정보 숨기기
     const debugDiv = document.getElementById('fileDebugInfo');
     if (debugDiv && debugDiv.parentElement) {
         debugDiv.parentElement.style.display = 'none';
+    }
+    
+    // 시각적 효과
+    const uploadArea = document.getElementById('uploadArea');
+    if (uploadArea) {
+        uploadArea.classList.add('file-removed');
+        setTimeout(() => {
+            uploadArea.classList.remove('file-removed');
+        }, 1000);
     }
 }
 
@@ -521,6 +789,16 @@ function simulateAnalysis() {
     const analysisResult = document.getElementById('analysisResult');
     const progressFill = document.getElementById('progressFill');
     const nextToStep5 = document.getElementById('nextToStep5');
+    const progressContainer = document.querySelector('.progress-bar');
+    
+    // 시각적 효과: 분석 시작
+    if (analysisProgress) {
+        analysisProgress.classList.add('analysis-start');
+    }
+    
+    if (progressContainer) {
+        progressContainer.classList.add('progress-active');
+    }
     
     // 진행 상태 업데이트 함수들
     const statElements = {
@@ -534,32 +812,102 @@ function simulateAnalysis() {
     let progress = 0;
     const interval = setInterval(() => {
         progress += 1;
-        progressFill.style.width = `${progress}%`;
+        if (progressFill) {
+            progressFill.style.width = `${progress}%`;
+            
+            // 프로그레스 바 애니메이션
+            if (progress % 20 === 0) {
+                progressFill.classList.add('progress-pulse');
+                setTimeout(() => {
+                    progressFill.classList.remove('progress-pulse');
+                }, 200);
+            }
+        }
         
         // 각 분석 항목별 진행률 업데이트 (다른 속도로)
         if (progress <= 25) {
-            statElements.pronunciation.textContent = `${progress * 4}%`;
+            if (statElements.pronunciation) {
+                statElements.pronunciation.textContent = `${progress * 4}%`;
+                statElements.pronunciation.classList.add('stat-updating');
+                setTimeout(() => {
+                    statElements.pronunciation.classList.remove('stat-updating');
+                }, 100);
+            }
         } else if (progress <= 50) {
-            statElements.fluency.textContent = `${(progress - 25) * 4}%`;
+            if (statElements.fluency) {
+                statElements.fluency.textContent = `${(progress - 25) * 4}%`;
+                statElements.fluency.classList.add('stat-updating');
+                setTimeout(() => {
+                    statElements.fluency.classList.remove('stat-updating');
+                }, 100);
+            }
         } else if (progress <= 75) {
-            statElements.vocabulary.textContent = `${(progress - 50) * 4}%`;
+            if (statElements.vocabulary) {
+                statElements.vocabulary.textContent = `${(progress - 50) * 4}%`;
+                statElements.vocabulary.classList.add('stat-updating');
+                setTimeout(() => {
+                    statElements.vocabulary.classList.remove('stat-updating');
+                }, 100);
+            }
         } else {
-            statElements.grammar.textContent = `${(progress - 75) * 4}%`;
+            if (statElements.grammar) {
+                statElements.grammar.textContent = `${(progress - 75) * 4}%`;
+                statElements.grammar.classList.add('stat-updating');
+                setTimeout(() => {
+                    statElements.grammar.classList.remove('stat-updating');
+                }, 100);
+            }
         }
         
         // 완료 시
         if (progress >= 100) {
             clearInterval(interval);
             
+            // 완료 효과
+            if (progressFill) {
+                progressFill.classList.add('progress-complete');
+            }
+            
             // 약간의 지연 후 결과 표시
             setTimeout(() => {
-                analysisProgress.style.display = 'none';
-                analysisResult.style.display = 'block';
-                if (nextToStep5) nextToStep5.style.display = 'inline-flex';
+                if (analysisProgress) {
+                    analysisProgress.style.display = 'none';
+                    analysisProgress.classList.remove('analysis-start');
+                }
+                
+                if (analysisResult) {
+                    analysisResult.style.display = 'block';
+                    analysisResult.classList.add('result-appear');
+                    
+                    setTimeout(() => {
+                        analysisResult.classList.remove('result-appear');
+                    }, 1000);
+                }
+                
+                if (nextToStep5) {
+                    nextToStep5.style.display = 'inline-flex';
+                    nextToStep5.classList.add('next-pulse');
+                    
+                    setTimeout(() => {
+                        nextToStep5.classList.remove('next-pulse');
+                    }, 2000);
+                }
                 
                 // 랜덤 결과 생성 (실제 구현에서는 서버 응답을 사용)
                 generateRandomResults();
-            }, 500);
+                
+                // 결과 표시 효과
+                setTimeout(() => {
+                    const resultCard = document.querySelector('.result-card');
+                    if (resultCard) {
+                        resultCard.classList.add('result-highlight');
+                        setTimeout(() => {
+                            resultCard.classList.remove('result-highlight');
+                        }, 1500);
+                    }
+                }, 300);
+                
+            }, 800);
         }
     }, 30);
 }
@@ -574,7 +922,7 @@ function generateRandomResults() {
         { name: "Basic 1", desc: "초중급", cefr: "A2", toeic: "225-549", ielts: "3.0-3.5" },
         { name: "Intermediate 1", desc: "중급", cefr: "B1", toeic: "550-650", ielts: "4.0-4.5" },
         { name: "Intermediate 2", desc: "중급", cefr: "B1", toeic: "650-720", ielts: "4.5-5.0" },
-        { name: "Intermediate 3", desc: "중급", cefr: "B1", toeic: "720-784", ielts: "5.0-5.5" },
+        { name: "Intermediate 3", desc: "중급", cefr: "B2", toeic: "720-784", ielts: "5.0-5.5" },
         { name: "Advanced 1", desc: "중상급", cefr: "B2", toeic: "785-850", ielts: "5.5-6.0" },
         { name: "Advanced 2", desc: "고급", cefr: "C1", toeic: "945-990", ielts: "7.0-7.5" },
         { name: "Advanced 3", desc: "고급", cefr: "C1", toeic: "945-990", ielts: "7.5-8.0" }
@@ -603,19 +951,42 @@ function generateRandomResults() {
             <span class="level-name">${result.name}</span>
             <span class="level-desc">${result.desc}</span>
         `;
+        edLevelBadge.classList.add('badge-appear');
+        
+        setTimeout(() => {
+            edLevelBadge.classList.remove('badge-appear');
+        }, 1000);
     }
     
     const cefrLevel = document.getElementById('cefrLevel');
     if (cefrLevel) {
         cefrLevel.textContent = result.cefr;
-        cefrLevel.className = `result-value cefr-${result.cefr.toLowerCase()}`;
+        cefrLevel.className = `result-value cefr-${result.cefr.toLowerCase()} cefr-appear`;
+        
+        setTimeout(() => {
+            cefrLevel.classList.remove('cefr-appear');
+        }, 1000);
     }
     
     const toeicScore = document.getElementById('toeicScore');
-    if (toeicScore) toeicScore.textContent = result.toeic;
+    if (toeicScore) {
+        toeicScore.textContent = result.toeic;
+        toeicScore.classList.add('score-appear');
+        
+        setTimeout(() => {
+            toeicScore.classList.remove('score-appear');
+        }, 1200);
+    }
     
     const ieltsScore = document.getElementById('ieltsScore');
-    if (ieltsScore) ieltsScore.textContent = result.ielts;
+    if (ieltsScore) {
+        ieltsScore.textContent = result.ielts;
+        ieltsScore.classList.add('score-appear');
+        
+        setTimeout(() => {
+            ieltsScore.classList.remove('score-appear');
+        }, 1400);
+    }
     
     // Step 5에서 사용할 추천 코스 설정
     let recommendedCourse = "";
@@ -630,7 +1001,10 @@ function generateRandomResults() {
     // 로컬 스토리지에 결과 저장 (Step 5에서 사용)
     localStorage.setItem('edDiagnosisResult', JSON.stringify({
         edLevel: result.name,
-        recommendedCourse: recommendedCourse
+        recommendedCourse: recommendedCourse,
+        cefr: result.cefr,
+        toeic: result.toeic,
+        ielts: result.ielts
     }));
 }
 
@@ -660,7 +1034,27 @@ function displayFinalResults() {
                     <span class="course-duration">16주 과정</span>
                 `;
             }
+            
+            courseBadge.classList.add('course-badge-appear');
+            
+            setTimeout(() => {
+                courseBadge.classList.remove('course-badge-appear');
+            }, 1000);
         }
+        
+        // CTA 버튼 애니메이션
+        setTimeout(() => {
+            const ctaButtons = document.querySelectorAll('.cta-buttons .btn');
+            ctaButtons.forEach((btn, index) => {
+                setTimeout(() => {
+                    btn.classList.add('cta-appear');
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('cta-appear');
+                    }, 1000);
+                }, index * 300);
+            });
+        }, 500);
     }
 }
 
@@ -672,6 +1066,19 @@ function toggleAccordion() {
     if (content && icon) {
         content.classList.toggle('expanded');
         icon.textContent = content.classList.contains('expanded') ? '−' : '+';
+        
+        // 애니메이션 효과
+        if (content.classList.contains('expanded')) {
+            content.classList.add('accordion-expand');
+            setTimeout(() => {
+                content.classList.remove('accordion-expand');
+            }, 500);
+        } else {
+            content.classList.add('accordion-collapse');
+            setTimeout(() => {
+                content.classList.remove('accordion-collapse');
+            }, 500);
+        }
     }
 }
 
@@ -690,6 +1097,7 @@ function restartDiagnosis() {
         clearInterval(recordingTimer);
         recordingTimer = null;
     }
+    isRecording = false;
     
     // 파일 업로드 초기화
     removeFile();
@@ -700,13 +1108,45 @@ function restartDiagnosis() {
     const nextToStep5 = document.getElementById('nextToStep5');
     const progressFill = document.getElementById('progressFill');
     
-    if (analysisProgress) analysisProgress.style.display = 'block';
-    if (analysisResult) analysisResult.style.display = 'none';
-    if (nextToStep5) nextToStep5.style.display = 'none';
-    if (progressFill) progressFill.style.width = '0%';
+    if (analysisProgress) {
+        analysisProgress.style.display = 'block';
+        analysisProgress.classList.remove('analysis-start');
+    }
+    
+    if (analysisResult) {
+        analysisResult.style.display = 'none';
+        analysisResult.classList.remove('result-appear');
+    }
+    
+    if (nextToStep5) {
+        nextToStep5.style.display = 'none';
+        nextToStep5.classList.remove('next-pulse');
+    }
+    
+    if (progressFill) {
+        progressFill.style.width = '0%';
+        progressFill.classList.remove('progress-complete', 'progress-pulse');
+    }
+    
+    // 프로그레스 바 비활성화
+    const progressContainer = document.querySelector('.progress-bar');
+    if (progressContainer) {
+        progressContainer.classList.remove('progress-active');
+    }
     
     // 첫 번째 단계로 이동
-    goToStep(1);
+    setTimeout(() => {
+        goToStep(1);
+    }, 300);
+    
+    // 재시작 시각적 효과
+    const restartBtn = event?.target;
+    if (restartBtn) {
+        restartBtn.classList.add('restart-clicked');
+        setTimeout(() => {
+            restartBtn.classList.remove('restart-clicked');
+        }, 300);
+    }
 }
 
 // 페이지 상단으로 스크롤
@@ -725,14 +1165,87 @@ function selectUploadMethod(method) {
     const recordMethodBtn = document.getElementById('recordMethodBtn');
     
     if (method === 'file') {
-        if (fileUploadSection) fileUploadSection.style.display = 'block';
-        if (directRecordingSection) directRecordingSection.style.display = 'none';
-        if (fileMethodBtn) fileMethodBtn.classList.add('active');
-        if (recordMethodBtn) recordMethodBtn.classList.remove('active');
+        if (fileUploadSection) {
+            fileUploadSection.style.display = 'block';
+            fileUploadSection.classList.add('section-appear');
+            
+            setTimeout(() => {
+                fileUploadSection.classList.remove('section-appear');
+            }, 500);
+        }
+        if (directRecordingSection) {
+            directRecordingSection.style.display = 'none';
+        }
+        if (fileMethodBtn) {
+            fileMethodBtn.classList.add('active');
+            fileMethodBtn.classList.add('tab-active-animation');
+            
+            setTimeout(() => {
+                fileMethodBtn.classList.remove('tab-active-animation');
+            }, 300);
+        }
+        if (recordMethodBtn) {
+            recordMethodBtn.classList.remove('active');
+        }
     } else if (method === 'record') {
-        if (fileUploadSection) fileUploadSection.style.display = 'none';
-        if (directRecordingSection) directRecordingSection.style.display = 'block';
-        if (fileMethodBtn) fileMethodBtn.classList.remove('active');
-        if (recordMethodBtn) recordMethodBtn.classList.add('active');
+        if (fileUploadSection) {
+            fileUploadSection.style.display = 'none';
+        }
+        if (directRecordingSection) {
+            directRecordingSection.style.display = 'block';
+            directRecordingSection.classList.add('section-appear');
+            
+            setTimeout(() => {
+                directRecordingSection.classList.remove('section-appear');
+            }, 500);
+        }
+        if (fileMethodBtn) {
+            fileMethodBtn.classList.remove('active');
+        }
+        if (recordMethodBtn) {
+            recordMethodBtn.classList.add('active');
+            recordMethodBtn.classList.add('tab-active-animation');
+            
+            setTimeout(() => {
+                recordMethodBtn.classList.remove('tab-active-animation');
+            }, 300);
+        }
     }
 }
+
+// 추가 시각적 효과 함수들
+function animateElement(elementId, animationClass) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.classList.add(animationClass);
+        setTimeout(() => {
+            element.classList.remove(animationClass);
+        }, 1000);
+    }
+}
+
+// 파일 드래그 앤 드롭 시각적 효과
+function setupDragDropEffects() {
+    const dropZone = document.getElementById('uploadArea');
+    if (!dropZone) return;
+    
+    // 드래그 오버 시 효과
+    document.addEventListener('dragover', function(e) {
+        if (e.target === dropZone || dropZone.contains(e.target)) {
+            dropZone.classList.add('drag-over-global');
+        }
+    });
+    
+    document.addEventListener('dragleave', function(e) {
+        if (!dropZone.contains(e.relatedTarget)) {
+            dropZone.classList.remove('drag-over-global');
+        }
+    });
+    
+    document.addEventListener('drop', function(e) {
+        dropZone.classList.remove('drag-over-global');
+    });
+}
+
+// 초기화 시 드래그 효과 설정
+setupDragDropEffects();
