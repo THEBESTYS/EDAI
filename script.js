@@ -922,7 +922,7 @@ function generateRandomResults() {
         { name: "Basic 1", desc: "초중급", cefr: "A2", toeic: "225-549", ielts: "3.0-3.5" },
         { name: "Intermediate 1", desc: "중급", cefr: "B1", toeic: "550-650", ielts: "4.0-4.5" },
         { name: "Intermediate 2", desc: "중급", cefr: "B1", toeic: "650-720", ielts: "4.5-5.0" },
-        { name: "Intermediate 3", desc: "중급", cefr: "B2", toeic: "720-784", ielts: "5.0-5.5" },
+        { name: "Intermediate 3", desc: "중상급", cefr: "B2", toeic: "720-784", ielts: "5.0-5.5" },
         { name: "Advanced 1", desc: "중상급", cefr: "B2", toeic: "785-850", ielts: "5.5-6.0" },
         { name: "Advanced 2", desc: "고급", cefr: "C1", toeic: "945-990", ielts: "7.0-7.5" },
         { name: "Advanced 3", desc: "고급", cefr: "C1", toeic: "945-990", ielts: "7.5-8.0" }
