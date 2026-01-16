@@ -132,47 +132,146 @@
             </section>
 
             <!-- Step 3: 음성 파일 업로드 -->
-            <section class="step-content" id="step-3">
-                <div class="step-header">
-                    <h2>STEP 3: 녹음 파일 업로드</h2>
-                    <p>스피킹 맥스에서 녹음한 파일을 업로드해주세요.</p>
+<section class="step-content" id="step-3">
+    <div class="step-header">
+        <h2>STEP 3: 음성 파일 준비</h2>
+        <p>아래 방법 중 하나를 선택하여 음성 파일을 준비해주세요.</p>
+    </div>
+    <div class="step-body">
+        
+        <!-- 방법 선택 탭 -->
+        <div class="method-tabs">
+            <button id="recordMethodBtn" class="method-tab active" onclick="selectUploadMethod('record')">
+                <i class="fas fa-microphone"></i> 웹에서 직접 녹음
+            </button>
+            <button id="fileMethodBtn" class="method-tab" onclick="selectUploadMethod('file')">
+                <i class="fas fa-upload"></i> 파일 업로드
+            </button>
+        </div>
+        
+        <!-- 모바일 가이드 -->
+        <div class="mobile-guide" id="mobileGuide" style="display: none;">
+            <div class="guide-content">
+                <h4><i class="fas fa-mobile-alt"></i> 핸드폰 사용자 안내</h4>
+                <p>핸드폰에서는 <strong>"웹에서 직접 녹음"</strong>을 권장합니다.</p>
+                <p>파일 업로드 시 문제가 있다면, 녹음 파일을 <strong>MP3 형식</strong>으로 변환해 보세요.</p>
+            </div>
+        </div>
+        
+        <!-- 방법 1: 웹에서 직접 녹음 -->
+        <div class="method-section active" id="directRecordingSection">
+            <h3><i class="fas fa-microphone"></i> 웹에서 직접 녹음</h3>
+            <div class="recording-instructions">
+                <ol>
+                    <li>아래 "녹음 시작" 버튼을 누르세요</li>
+                    <li>마이크 사용 권한을 허용해주세요</li>
+                    <li>영어로 자연스럽게 말해주세요 (1-2분 권장)</li>
+                    <li>완료되면 "녹음 중지" 버튼을 누르세요</li>
+                </ol>
+            </div>
+            
+            <div class="recording-controls">
+                <button id="startRecordingBtn" class="btn-record">
+                    <i class="fas fa-microphone"></i> 녹음 시작
+                </button>
+                
+                <div id="recordingStatus" class="recording-status">
+                    <div class="recording-indicator">
+                        <span class="recording-dot"></span>
+                        <span>녹음 중</span>
+                        <span id="recordTimer">00:00</span>
+                    </div>
+                    <button id="stopRecordingBtn" class="btn-stop">
+                        <i class="fas fa-stop"></i> 녹음 중지
+                    </button>
                 </div>
-                <div class="step-body">
-                    <div class="upload-area" id="uploadArea">
-                        <div class="upload-icon">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                        </div>
-                        <h3>파일을 여기로 끌어오거나 클릭하세요</h3>
-                        <p>MP3, WAV, M4A 형식, 최대 50MB</p>
-                        <input type="file" id="audioFile" accept=".mp3,.wav,.m4a" hidden>
-                        <button class="btn upload-btn" onclick="document.getElementById('audioFile').click()">
-                            파일 선택
-                        </button>
-                        <div class="file-info" id="fileInfo">
-                            <!-- 선택된 파일 정보가 여기에 표시됩니다 -->
-                        </div>
+                
+                <div class="recording-tips">
+                    <p><i class="fas fa-lightbulb"></i> 조용한 장소에서 녹음하세요</p>
+                    <p><i class="fas fa-lightbulb"></i> 마이크에 가까이 말하세요</p>
+                    <p><i class="fas fa-lightbulb"></i> 자연스러운 속도로 말하세요</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 방법 2: 파일 업로드 -->
+        <div class="method-section" id="fileUploadSection">
+            <h3><i class="fas fa-upload"></i> 파일 업로드</h3>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h4>파일을 끌어오거나 선택하세요</h4>
+                <p>MP3, M4A, WAV 형식, 최대 50MB</p>
+                
+                <button id="fileSelectBtn" class="btn-upload">
+                    <i class="fas fa-folder-open"></i> 파일 선택
+                </button>
+                
+                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                
+                <div class="file-info" id="fileInfo">
+                    <!-- 선택된 파일 정보가 여기에 표시됩니다 -->
+                </div>
+            </div>
+            
+            <!-- 파일 오류 메시지 -->
+            <div class="file-error" id="fileError" style="display: none;">
+                <!-- 오류 메시지가 여기에 표시됩니다 -->
+            </div>
+            
+            <!-- 파일 디버그 정보 -->
+            <div class="debug-info" style="display: none;">
+                <h5><i class="fas fa-bug"></i> 파일 디버그 정보</h5>
+                <pre id="fileDebugInfo"></pre>
+            </div>
+            
+            <!-- 파일 찾기 가이드 -->
+            <div class="file-guide">
+                <h4><i class="fas fa-question-circle"></i> 파일 찾기 어려우시나요?</h4>
+                <div class="guide-tips">
+                    <div class="tip">
+                        <strong>아이폰</strong>
+                        <p>파일 앱 → "나의 iPhone" → 카카오톡 또는 녹음 파일</p>
                     </div>
-                    
-                    <div class="upload-requirements">
-                        <h3><i class="fas fa-info-circle"></i> 업로드 요구사항</h3>
-                        <ul>
-                            <li>파일 크기: 50MB 이하</li>
-                            <li>지원 형식: MP3, WAV, M4A</li>
-                            <li>권장 길이: 2-5분</li>
-                            <li>권장 내용: 영어 대화 녹음</li>
-                        </ul>
-                        <div class="privacy-notice">
-                            <i class="fas fa-shield-alt"></i>
-                            <p>업로드된 음성 파일은 레벨 분석 목적으로만 사용되며, 분석 완료 후 24시간 내에 삭제됩니다.</p>
-                        </div>
+                    <div class="tip">
+                        <strong>안드로이드</strong>
+                        <p>파일 관리자 → "다운로드" 폴더</p>
                     </div>
-                    
-                    <div class="step-navigation">
-                        <button class="btn prev-btn" onclick="goToStep(2)"><i class="fas fa-arrow-left"></i> 이전 단계</button>
-                        <button class="btn analyze-btn" id="analyzeBtn" onclick="goToStep(4)" disabled>AI 분석 시작 <i class="fas fa-robot"></i></button>
+                    <div class="tip">
+                        <strong>공통 팁</strong>
+                        <p>파일명을 <code>영어테스트.mp3</code>로 변경해보세요</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+        
+        <!-- 업로드 요구사항 -->
+        <div class="upload-requirements">
+            <h4><i class="fas fa-info-circle"></i> 요구사항</h4>
+            <ul>
+                <li>지원 형식: MP3, M4A, WAV, AAC</li>
+                <li>최대 크기: 50MB</li>
+                <li>권장 길이: 1-3분</li>
+                <li>내용: 영어 발화 (대화, 발표, 읽기 등)</li>
+            </ul>
+            <div class="privacy-notice">
+                <i class="fas fa-shield-alt"></i>
+                <p>업로드된 모든 파일은 분석 후 24시간 이내 삭제됩니다.</p>
+            </div>
+        </div>
+        
+        <div class="step-navigation">
+            <button class="btn prev-btn" onclick="goToStep(2)">
+                <i class="fas fa-arrow-left"></i> 이전 단계
+            </button>
+            <button class="btn analyze-btn" id="analyzeBtn" onclick="goToStep(4)" disabled>
+                <i class="fas fa-robot"></i> AI 분석 시작
+            </button>
+        </div>
+    </div>
+</section>
 
             <!-- Step 4: AI 분석 및 결과 -->
             <section class="step-content" id="step-4">
