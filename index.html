@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -133,282 +132,339 @@
             </section>
 
             <!-- Step 3: 음성 파일 업로드 -->
-<!-- Step 3: 음성 파일 업로드 -->
-<section class="step-content" id="step-3">
-    <div class="step-header">
-        <h2>STEP 3: 음성 파일 준비</h2>
-        <p>아래 방법 중 하나를 선택하여 음성 파일을 준비해주세요.</p>
-        
-        <!-- 진행 상태 표시기 -->
-        <div class="step-progress-indicator">
-            <div class="progress-dots">
-                <span class="dot active"></span>
-                <span class="dot active"></span>
-                <span class="dot active current"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-            <div class="progress-label">파일 업로드/녹음</div>
-        </div>
-    </div>
-    
-    <div class="step-body">
-        
-        <!-- 방법 선택 탭 - 눈에 띄는 디자인 -->
-        <div class="method-tabs">
-            <button id="recordMethodBtn" class="method-tab active" onclick="selectUploadMethod('record')">
-                <div class="tab-content">
-                    <div class="tab-icon">
-                        <i class="fas fa-microphone"></i>
-                    </div>
-                    <div class="tab-text">
-                        <div class="tab-title">웹에서 직접 녹음</div>
-                        <div class="tab-subtitle">마이크로 바로 녹음</div>
-                    </div>
-                </div>
-            </button>
-            <button id="fileMethodBtn" class="method-tab" onclick="selectUploadMethod('file')">
-                <div class="tab-content">
-                    <div class="tab-icon">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <div class="tab-text">
-                        <div class="tab-title">파일 업로드</div>
-                        <div class="tab-subtitle">기존 파일 업로드</div>
-                    </div>
-                </div>
-            </button>
-        </div>
-        
-        <!-- 모바일 가이드 -->
-        <div class="mobile-guide" id="mobileGuide" style="display: none;">
-            <div class="guide-content">
-                <div class="guide-header">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h4>📱 핸드폰 사용자 안내</h4>
-                </div>
-                <div class="guide-body">
-                    <p>핸드폰에서는 <strong class="highlight">"웹에서 직접 녹음"</strong>을 권장합니다.</p>
-                    <p>파일 업로드 시 문제가 있다면, 녹음 파일을 <strong class="highlight">MP3 형식</strong>으로 변환해 보세요.</p>
-                    <div class="guide-tip">
-                        <i class="fas fa-lightbulb"></i>
-                        <span>조용한 환경에서 녹음하시면 더 정확한 결과를 얻을 수 있습니다.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 방법 1: 웹에서 직접 녹음 -->
-        <div class="method-section active" id="directRecordingSection">
-            <div class="section-header">
-                <h3><i class="fas fa-microphone"></i> 웹에서 직접 녹음</h3>
-                <div class="section-badge">추천</div>
-            </div>
-            
-            <div class="recording-instructions">
-                <div class="instructions-header">
-                    <i class="fas fa-clipboard-list"></i>
-                    <h5>녹음 방법 안내</h5>
-                </div>
-                <ol>
-                    <li><strong>아래 "녹음 시작" 버튼을 누르세요</strong> - 빨간색 버튼이 보입니다</li>
-                    <li><strong>마이크 사용 권한을 허용해주세요</strong> - 브라우저 팝업 확인</li>
-                    <li><strong>영어로 자연스럽게 말해주세요</strong> - 1-2분 정도 이야기해주세요</li>
-                    <li><strong>완료되면 "녹음 중지" 버튼을 누르세요</strong> - 파란색 버튼으로 중지</li>
-                </ol>
-            </div>
-            
-            <div class="recording-controls">
-                <!-- 녹음 상태 표시 -->
-                <div class="recording-state">
-                    <div class="state-indicator idle">
-                        <div class="state-dot"></div>
-                        <span class="state-text">녹음 대기 중</span>
+            <section class="step-content" id="step-3">
+                <div class="step-header">
+                    <h2>STEP 3: 음성 파일 준비</h2>
+                    <p>아래 방법 중 하나를 선택하여 음성 파일을 준비해주세요.</p>
+                    
+                    <!-- 진행 상태 표시기 -->
+                    <div class="step-progress-indicator">
+                        <div class="progress-dots">
+                            <span class="dot active"></span>
+                            <span class="dot active"></span>
+                            <span class="dot active current"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <div class="progress-label">파일 업로드/녹음</div>
                     </div>
                 </div>
                 
-                <!-- 녹음 시작 버튼 - 빨간색으로 눈에 띄게 -->
-                <button id="startRecordingBtn" class="btn-record">
-                    <div class="btn-content">
-                        <div class="btn-icon">
-                            <i class="fas fa-microphone"></i>
-                            <div class="pulse-ring"></div>
+                <div class="step-body">
+                    <!-- 평가 시작 전 디스클레이머 -->
+                    <div class="evaluation-disclaimer" id="evaluationDisclaimer">
+                        <h4><i class="fas fa-exclamation-triangle"></i> 중요한 안내사항</h4>
+                        
+                        <div class="disclaimer-content">
+                            <div class="disclaimer-item">
+                                <div class="disclaimer-icon">🎤</div>
+                                <div class="disclaimer-text">
+                                    <h5>본 테스트의 한계</h5>
+                                    <p>이 진단은 <strong>스피킹 능력만을 평가</strong>하며, 문법/읽기/쓰기 능력은 포함되지 않습니다.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="disclaimer-item">
+                                <div class="disclaimer-icon">🌍</div>
+                                <div class="disclaimer-text">
+                                    <h5>원어민 평가 제한</h5>
+                                    <p>원어민이라도 <strong>낮은 점수를 받을 수 있습니다</strong>. 시스템은 학습자 패턴에 최적화되어 있습니다.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="disclaimer-item">
+                                <div class="disclaimer-icon">💬</div>
+                                <div class="disclaimer-text">
+                                    <h5>올바른 평가 방법</h5>
+                                    <p><strong>스피킹 맥스 AI와의 실제 대화 형식</strong>으로 녹음해야 정확한 결과가 나옵니다.</p>
+                                    <p class="warning">※ 일방적 발화(스피치, 뉴스 등)는 낮게 평가될 수 있습니다.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="agreement-check">
+                                <input type="checkbox" id="disclaimerAgree" required>
+                                <label for="disclaimerAgree">위 안내사항을 이해했으며, 본인의 학습자 수준을 정확히 평가받기 위해 테스트에 응합니다.</label>
+                            </div>
                         </div>
-                        <div class="btn-text">
-                            <div class="btn-title">녹음 시작</div>
-                            <div class="btn-subtitle">마이크 사용 권한 필요</div>
+                        
+                        <div class="disclaimer-actions">
+                            <button id="startTestBtn" class="btn start-test-btn" disabled onclick="startTestAfterAgreement()">
+                                <i class="fas fa-check-circle"></i> 테스트 시작하기
+                            </button>
                         </div>
-                    </div>
-                </button>
-                
-                <!-- 녹음 중 표시 -->
-                <div id="recordingStatus" class="recording-status">
-                    <div class="recording-header">
-                        <h4><i class="fas fa-broadcast-tower"></i> 녹음 진행 중</h4>
                     </div>
                     
-                    <div class="recording-body">
-                        <div class="recording-indicator">
-                            <div class="indicator-container">
-                                <!-- 빨간 점 표시기 -->
-                                <div class="recording-dot"></div>
-                                <div class="recording-glow"></div>
-                                <div class="recording-ripple"></div>
-                            </div>
-                            <div class="indicator-text">
-                                <span class="recording-label">녹음 중</span>
-                                <span id="recordTimer" class="recording-timer">00:00</span>
-                            </div>
+                    <!-- 디스클레이머 리마인더 (필요시 표시) -->
+                    <div class="disclaimer-reminder" id="disclaimerReminder" style="display: none;">
+                        <div class="reminder-content">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>테스트를 시작하려면 상단의 안내사항에 동의해주세요.</p>
                         </div>
-                        
-                        <div class="recording-wave">
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
+                    </div>
+                    
+                    <!-- 디스클레이머 알림 (녹음 시도시) -->
+                    <div class="disclaimer-alert" id="disclaimerAlert" style="display: none;">
+                        <div class="alert-content">
+                            <i class="fas fa-microphone-slash"></i>
+                            <p>안내사항에 동의한 후 녹음을 시작할 수 있습니다.</p>
                         </div>
-                        
-                        <button id="stopRecordingBtn" class="btn-stop">
-                            <i class="fas fa-stop"></i>
-                            <span>녹음 중지</span>
+                    </div>
+                    
+                    <!-- 방법 선택 탭 - 눈에 띄는 디자인 -->
+                    <div class="method-tabs">
+                        <button id="recordMethodBtn" class="method-tab active" onclick="selectUploadMethod('record')">
+                            <div class="tab-content">
+                                <div class="tab-icon">
+                                    <i class="fas fa-microphone"></i>
+                                </div>
+                                <div class="tab-text">
+                                    <div class="tab-title">웹에서 직접 녹음</div>
+                                    <div class="tab-subtitle">마이크로 바로 녹음</div>
+                                </div>
+                            </div>
+                        </button>
+                        <button id="fileMethodBtn" class="method-tab" onclick="selectUploadMethod('file')">
+                            <div class="tab-content">
+                                <div class="tab-icon">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <div class="tab-text">
+                                    <div class="tab-title">파일 업로드</div>
+                                    <div class="tab-subtitle">기존 파일 업로드</div>
+                                </div>
+                            </div>
                         </button>
                     </div>
-                </div>
-                
-                <!-- 녹음 팁 -->
-                <div class="recording-tips">
-                    <div class="tips-header">
-                        <i class="fas fa-tips"></i>
-                        <h5>녹음 성공 팁</h5>
-                    </div>
-                    <div class="tips-grid">
-                        <div class="tip-item">
-                            <i class="fas fa-volume-up"></i>
-                            <p>조용한 장소에서 녹음하세요</p>
-                        </div>
-                        <div class="tip-item">
-                            <i class="fas fa-user"></i>
-                            <p>마이크에 가까이 말하세요</p>
-                        </div>
-                        <div class="tip-item">
-                            <i class="fas fa-clock"></i>
-                            <p>자연스러운 속도로 말하세요</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 방법 2: 파일 업로드 -->
-        <div class="method-section" id="fileUploadSection">
-            <div class="section-header">
-                <h3><i class="fas fa-upload"></i> 파일 업로드</h3>
-                <div class="section-badge">기존 파일</div>
-            </div>
-            
-            <!-- 눈에 띄는 업로드 영역 -->
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-animation">
-                    <div class="upload-cloud">
-                        <i class="fas fa-cloud"></i>
-                    </div>
-                    <div class="upload-arrow">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
-                </div>
-                
-                <div class="upload-content">
-                    <h4>음성 파일 업로드</h4>
-                    <p>녹음한 음성 파일을 여기에 올려주세요</p>
                     
-                    <div class="upload-buttons">
-                        <button id="fileSelectBtn" class="btn-upload">
+                    <!-- 모바일 가이드 -->
+                    <div class="mobile-guide" id="mobileGuide" style="display: none;">
+                        <div class="guide-content">
+                            <div class="guide-header">
+                                <i class="fas fa-mobile-alt"></i>
+                                <h4>📱 핸드폰 사용자 안내</h4>
+                            </div>
+                            <div class="guide-body">
+                                <p>핸드폰에서는 <strong class="highlight">"웹에서 직접 녹음"</strong>을 권장합니다.</p>
+                                <p>파일 업로드 시 문제가 있다면, 녹음 파일을 <strong class="highlight">MP3 형식</strong>으로 변환해 보세요.</p>
+                                <div class="guide-tip">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>조용한 환경에서 녹음하시면 더 정확한 결과를 얻을 수 있습니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 방법 1: 웹에서 직접 녹음 -->
+                    <div class="method-section active" id="directRecordingSection">
+                        <div class="section-header">
+                            <h3><i class="fas fa-microphone"></i> 웹에서 직접 녹음</h3>
+                            <div class="section-badge">추천</div>
+                        </div>
+                        
+                        <div class="recording-instructions">
+                            <div class="instructions-header">
+                                <i class="fas fa-clipboard-list"></i>
+                                <h5>녹음 방법 안내</h5>
+                            </div>
+                            <ol>
+                                <li><strong>아래 "녹음 시작" 버튼을 누르세요</strong> - 빨간색 버튼이 보입니다</li>
+                                <li><strong>마이크 사용 권한을 허용해주세요</strong> - 브라우저 팝업 확인</li>
+                                <li><strong>영어로 자연스럽게 말해주세요</strong> - 1-2분 정도 이야기해주세요</li>
+                                <li><strong>완료되면 "녹음 중지" 버튼을 누르세요</strong> - 파란색 버튼으로 중지</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="recording-controls">
+                            <!-- 녹음 상태 표시 -->
+                            <div class="recording-state">
+                                <div class="state-indicator idle">
+                                    <div class="state-dot"></div>
+                                    <span class="state-text">녹음 대기 중</span>
+                                </div>
+                            </div>
+                            
+                            <!-- 녹음 시작 버튼 - 빨간색으로 눈에 띄게 -->
+                            <button id="startRecordingBtn" class="btn-record">
+                                <div class="btn-content">
+                                    <div class="btn-icon">
+                                        <i class="fas fa-microphone"></i>
+                                        <div class="pulse-ring"></div>
+                                    </div>
+                                    <div class="btn-text">
+                                        <div class="btn-title">녹음 시작</div>
+                                        <div class="btn-subtitle">마이크 사용 권한 필요</div>
+                                    </div>
+                                </div>
+                            </button>
+                            
+                            <!-- 녹음 중 표시 -->
+                            <div id="recordingStatus" class="recording-status">
+                                <div class="recording-header">
+                                    <h4><i class="fas fa-broadcast-tower"></i> 녹음 진행 중</h4>
+                                </div>
+                                
+                                <div class="recording-body">
+                                    <div class="recording-indicator">
+                                        <div class="indicator-container">
+                                            <!-- 빨간 점 표시기 -->
+                                            <div class="recording-dot"></div>
+                                            <div class="recording-glow"></div>
+                                            <div class="recording-ripple"></div>
+                                        </div>
+                                        <div class="indicator-text">
+                                            <span class="recording-label">녹음 중</span>
+                                            <span id="recordTimer" class="recording-timer">00:00</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recording-wave">
+                                        <div class="wave-bar"></div>
+                                        <div class="wave-bar"></div>
+                                        <div class="wave-bar"></div>
+                                        <div class="wave-bar"></div>
+                                        <div class="wave-bar"></div>
+                                    </div>
+                                    
+                                    <button id="stopRecordingBtn" class="btn-stop">
+                                        <i class="fas fa-stop"></i>
+                                        <span>녹음 중지</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- 녹음 팁 -->
+                            <div class="recording-tips">
+                                <div class="tips-header">
+                                    <i class="fas fa-tips"></i>
+                                    <h5>녹음 성공 팁</h5>
+                                </div>
+                                <div class="tips-grid">
+                                    <div class="tip-item">
+                                        <i class="fas fa-volume-up"></i>
+                                        <p>조용한 장소에서 녹음하세요</p>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-user"></i>
+                                        <p>마이크에 가까이 말하세요</p>
+                                    </div>
+                                    <div class="tip-item">
+                                        <i class="fas fa-clock"></i>
+                                        <p>자연스러운 속도로 말하세요</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 방법 2: 파일 업로드 -->
+                    <div class="method-section" id="fileUploadSection">
+                        <div class="section-header">
+                            <h3><i class="fas fa-upload"></i> 파일 업로드</h3>
+                            <div class="section-badge">기존 파일</div>
+                        </div>
+                        
+                        <!-- 눈에 띄는 업로드 영역 -->
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-animation">
+                                <div class="upload-cloud">
+                                    <i class="fas fa-cloud"></i>
+                                </div>
+                                <div class="upload-arrow">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="upload-content">
+                                <h4>음성 파일 업로드</h4>
+                                <p>녹음한 음성 파일을 여기에 올려주세요</p>
+                                
+                                <div class="upload-buttons">
+                                    <button id="fileSelectBtn" class="btn-upload">
+                                        <div class="btn-content">
+                                            <div class="btn-icon">
+                                                <i class="fas fa-folder-open"></i>
+                                            </div>
+                                            <div class="btn-text">
+                                                <div class="btn-title">파일 선택</div>
+                                                <div class="btn-subtitle">클릭하여 파일 찾기</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                    
+                                    <div class="upload-divider">
+                                        <span>또는</span>
+                                    </div>
+                                    
+                                    <div class="drag-drop-hint">
+                                        <i class="fas fa-mouse-pointer"></i>
+                                        <p>파일을 이곳에 끌어다 놓으세요</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+                            
+                            <div class="file-info" id="fileInfo">
+                                <!-- 선택된 파일 정보가 여기에 표시됩니다 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 파일 오류 메시지 -->
+                        <div class="file-error" id="fileError" style="display: none;">
+                            <!-- 오류 메시지가 여기에 표시됩니다 -->
+                        </div>
+                        
+                        <!-- 파일 찾기 가이드 -->
+                        <div class="file-guide">
+                            <div class="guide-header">
+                                <i class="fas fa-question-circle"></i>
+                                <h4>파일 찾기 어려우시나요?</h4>
+                            </div>
+                            <div class="guide-tips">
+                                <div class="tip">
+                                    <div class="tip-header">
+                                        <i class="fab fa-apple"></i>
+                                        <strong>아이폰 사용자</strong>
+                                    </div>
+                                    <p>파일 앱 → "나의 iPhone" → 카카오톡 또는 녹음 파일</p>
+                                </div>
+                                <div class="tip">
+                                    <div class="tip-header">
+                                        <i class="fab fa-android"></i>
+                                        <strong>안드로이드 사용자</strong>
+                                    </div>
+                                    <p>파일 관리자 → "다운로드" 폴더 → ".mp3" 파일 검색</p>
+                                </div>
+                                <div class="tip">
+                                    <div class="tip-header">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <strong>공통 팁</strong>
+                                    </div>
+                                    <p>파일명을 <code class="file-example">영어테스트.mp3</code>로 변경해보세요</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 다음 단계 버튼 -->
+                    <div class="step-navigation">
+                        <button class="btn prev-btn" onclick="goToStep(2)">
+                            <i class="fas fa-arrow-left"></i> 이전 단계
+                        </button>
+                        <button class="btn analyze-btn" id="analyzeBtn" onclick="goToStep(4)" disabled>
                             <div class="btn-content">
                                 <div class="btn-icon">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-robot"></i>
                                 </div>
                                 <div class="btn-text">
-                                    <div class="btn-title">파일 선택</div>
-                                    <div class="btn-subtitle">클릭하여 파일 찾기</div>
+                                    <div class="btn-title">AI 분석 시작</div>
+                                    <div class="btn-subtitle">파일을 먼저 업로드해주세요</div>
                                 </div>
                             </div>
                         </button>
-                        
-                        <div class="upload-divider">
-                            <span>또는</span>
-                        </div>
-                        
-                        <div class="drag-drop-hint">
-                            <i class="fas fa-mouse-pointer"></i>
-                            <p>파일을 이곳에 끌어다 놓으세요</p>
-                        </div>
                     </div>
                 </div>
-                
-                <input type="file" id="audioFile" accept="audio/*" style="display: none;">
-                
-                <div class="file-info" id="fileInfo">
-                    <!-- 선택된 파일 정보가 여기에 표시됩니다 -->
-                </div>
-            </div>
-            
-            <!-- 파일 오류 메시지 -->
-            <div class="file-error" id="fileError" style="display: none;">
-                <!-- 오류 메시지가 여기에 표시됩니다 -->
-            </div>
-            
-            <!-- 파일 찾기 가이드 -->
-            <div class="file-guide">
-                <div class="guide-header">
-                    <i class="fas fa-question-circle"></i>
-                    <h4>파일 찾기 어려우시나요?</h4>
-                </div>
-                <div class="guide-tips">
-                    <div class="tip">
-                        <div class="tip-header">
-                            <i class="fab fa-apple"></i>
-                            <strong>아이폰 사용자</strong>
-                        </div>
-                        <p>파일 앱 → "나의 iPhone" → 카카오톡 또는 녹음 파일</p>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-header">
-                            <i class="fab fa-android"></i>
-                            <strong>안드로이드 사용자</strong>
-                        </div>
-                        <p>파일 관리자 → "다운로드" 폴더 → ".mp3" 파일 검색</p>
-                    </div>
-                    <div class="tip">
-                        <div class="tip-header">
-                            <i class="fas fa-lightbulb"></i>
-                            <strong>공통 팁</strong>
-                        </div>
-                        <p>파일명을 <code class="file-example">영어테스트.mp3</code>로 변경해보세요</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 다음 단계 버튼 -->
-        <div class="step-navigation">
-            <button class="btn prev-btn" onclick="goToStep(2)">
-                <i class="fas fa-arrow-left"></i> 이전 단계
-            </button>
-            <button class="btn analyze-btn" id="analyzeBtn" onclick="goToStep(4)" disabled>
-                <div class="btn-content">
-                    <div class="btn-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="btn-text">
-                        <div class="btn-title">AI 분석 시작</div>
-                        <div class="btn-subtitle">파일을 먼저 업로드해주세요</div>
-                    </div>
-                </div>
-            </button>
-        </div>
-    </div>
-</section>
+            </section>
 
             <!-- Step 4: AI 분석 및 결과 -->
             <section class="step-content" id="step-4">
@@ -445,6 +501,17 @@
                     <div class="analysis-result" id="analysisResult" style="display: none;">
                         <h3>레벨 진단 결과</h3>
                         
+                        <!-- 원어민 감지 알림 -->
+                        <div class="native-speaker-note" id="nativeSpeakerNote" style="display: none;">
+                            <div class="note-content">
+                                <i class="fas fa-star"></i>
+                                <div class="note-text">
+                                    <h4>상급자/원어민 감지 안내</h4>
+                                    <p>본 테스트는 <strong>초중급~중급 학습자를 위해 설계</strong>되었습니다. 원어민이나 고급 학습자의 경우 결과가 실제 실력을 반영하지 못할 수 있습니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- 결과 카드 -->
                         <div class="result-card">
                             <div class="result-header">
@@ -472,6 +539,31 @@
                             
                             <div class="result-notice">
                                 <p><i class="fas fa-exclamation-triangle"></i> <strong>중요 안내:</strong> 본 결과는 스피킹 능력을 기반으로 한 간이 진단입니다. 정확한 ED 레벨은 문법, 듣기, 읽기 시험을 포함한 종합 배치고사(Placement Test) 후에 결정됩니다.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 결과 해석 가이드 -->
+                        <div class="result-interpretation" id="resultInterpretation" style="display: none;">
+                            <h4><i class="fas fa-comment-medical"></i> 결과 해석 안내</h4>
+                            
+                            <div class="interpretation-guide">
+                                <div class="guide-section">
+                                    <h5>만약 예상보다 낮은 점수를 받았다면:</h5>
+                                    <ul>
+                                        <li><strong>원어민/상급자일 경우:</strong> 본 시스템은 학습자 패턴에 최적화되어 있어 원어민의 자연스러운 말하기가 오히려 감점 요소가 될 수 있습니다.</li>
+                                        <li><strong>녹음 방식 확인:</strong> 스피킹 맥스의 AI와 실제 대화했나요? 일방적 발화는 낮게 평가됩니다.</li>
+                                        <li><strong>음질 문제:</strong> 배경 소음이 많거나 마이크 품질이 낮을 경우 발음 평가에 영향을 줍니다.</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="guide-section">
+                                    <h5>본 결과의 적절한 활용:</h5>
+                                    <ul>
+                                        <li>ED 학습 시작을 위한 <strong>참고 지표</strong>로 활용</li>
+                                        <li>정확한 레벨은 <strong>종합 배치고사</strong> 후 결정</li>
+                                        <li>실제 영어 실력보다는 <strong>ED 시스템 적응도</strong> 평가</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         
@@ -516,6 +608,58 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- 사용자 피드백 -->
+                        <div class="user-feedback">
+                            <h4><i class="fas fa-comment-dots"></i> 결과에 대한 의견이 있으신가요?</h4>
+                            <p>소중한 피드백을 통해 시스템을 개선하는 데 도움을 주세요.</p>
+                            
+                            <form id="feedbackForm" class="feedback-form">
+                                <div class="feedback-rating">
+                                    <p>이 결과는 얼마나 정확하다고 생각하시나요?</p>
+                                    <div class="rating-options">
+                                        <label>
+                                            <input type="radio" name="feedbackRating" value="very-accurate">
+                                            <span class="rating-label">매우 정확</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="feedbackRating" value="accurate">
+                                            <span class="rating-label">정확</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="feedbackRating" value="neutral">
+                                            <span class="rating-label">보통</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="feedbackRating" value="inaccurate">
+                                            <span class="rating-label">부정확</span>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="feedbackRating" value="very-inaccurate">
+                                            <span class="rating-label">매우 부정확</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="feedback-text">
+                                    <label for="feedbackText">의견을 남겨주세요:</label>
+                                    <textarea id="feedbackText" placeholder="결과에 대한 생각이나 개선 제안을 적어주세요..."></textarea>
+                                </div>
+                                
+                                <button type="button" id="submitFeedbackBtn" class="btn feedback-btn" onclick="submitFeedback()">
+                                    <i class="fas fa-paper-plane"></i> 피드백 제출
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- 결과 공유 -->
+                        <div class="result-sharing">
+                            <h4><i class="fas fa-share-alt"></i> 결과 공유하기</h4>
+                            <p>진단 결과를 친구들과 공유해보세요.</p>
+                            <button class="btn share-btn" onclick="shareResult()">
+                                <i class="fas fa-copy"></i> 결과 복사하기
+                            </button>
                         </div>
                     </div>
                     
@@ -577,7 +721,15 @@
                                 <p>1. <strong>본 스피킹 테스트는 간이 진단(Level Indicator)입니다.</strong> 정확한 ED 레벨과 학습 코스는 종합적인 배치고사(Placement Test) 후에 결정됩니다.</p>
                                 <p>2. 표시된 CEFR, TOEIC, IELTS 점수는 <strong>참고용 추정치</strong>이며, 실제 공인시험 점수를 보장하지 않습니다.</p>
                                 <p>3. ED 학습의 궁극적 목표는 체계적인 과정을 통해 <strong>실제 영어 의사소통 능력을 향상</strong>시키는 것입니다.</p>
+                                <p>4. 원어민이나 고급 학습자의 경우, 본 테스트 결과가 실제 실력을 반영하지 못할 수 있습니다.</p>
                             </div>
+                        </div>
+                        
+                        <!-- 추가 안내: 원어민/상급자용 -->
+                        <div class="advanced-learner-note">
+                            <h4><i class="fas fa-graduation-cap"></i> 원어민/상급 학습자 분들에게</h4>
+                            <p>본 테스트는 초중급~중급 학습자를 위해 설계되었습니다. 원어민이나 고급 학습자의 경우, ED의 <a href="#" class="advanced-course-link">상급자용 맞춤 코스</a>를 추천드립니다.</p>
+                            <p>정확한 레벨 평가를 원하시면 <a href="#" class="placement-test-link">종합 배치고사(Placement Test)</a>를 응시해주세요.</p>
                         </div>
                     </div>
                 </div>
@@ -590,7 +742,56 @@
                     <span class="accordion-icon" id="accordionIcon">+</span>
                 </div>
                 <div class="accordion-content" id="accordionContent">
-                    <!-- 여기에 앞서 제공한 호환성 차트 HTML 코드를 넣으세요 -->
+                    <!-- 호환성 차트 내용 (이전에 제공한 코드) -->
+                </div>
+            </section>
+            
+            <!-- FAQ 섹션 -->
+            <section class="faq-section" id="faq">
+                <div class="section-header">
+                    <h2><i class="fas fa-question-circle"></i> 자주 묻는 질문</h2>
+                </div>
+                
+                <div class="faq-content">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: 원어민인데 낮은 점수가 나왔어요. 왜 그런가요?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>본 테스트는 <strong>학습자 패턴에 최적화</strong>되어 있습니다. 원어민의 자연스러운 말하기 패턴(속도, 억양, 불완전 표현 등)이 오히려 감점 요소로 작용할 수 있습니다. 이는 시스템의 설계상 한계이며, 실제 영어 실력을 평가하는 도구가 아닙니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: 녹음 파일은 어떻게 준비해야 하나요?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>가장 정확한 결과를 얻으려면 <strong>ED 스피킹 맥스 AI와의 실제 대화</strong>를 녹음해주세요. 뉴스, 스피치, 독백 등 일방적 발화는 낮게 평가될 수 있습니다. 대화 형식으로 최소 2-3분 정도 녹음하는 것이 좋습니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: 이 결과로 ED 수강 레벨이 결정되나요?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>아닙니다. 본 테스트는 <strong>참고용 간이 진단</strong>입니다. 정확한 ED 수강 레벨은 문법, 듣기, 읽기를 포함한 종합 배치고사(Placement Test) 후에 결정됩니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Q: TOEIC/IELTS 점수는 정확한가요?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>표시된 점수는 <strong>통계적 추정치</strong>이며 실제 공인시험 점수를 보장하지 않습니다. ED 레벨과 국제 공인시험 점수의 상관관계를 참고용으로 제공하는 것입니다.</p>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
