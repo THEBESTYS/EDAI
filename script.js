@@ -6,6 +6,7 @@ let audioChunks = [];
 let recordingTimer = null;
 let recordingSeconds = 0;
 let isRecording = false;
+let hasAgreedToDisclaimer = false;
 
 // DOM이 로드되면 실행
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 버튼 호버 효과
     setupButtonEffects();
+    
+    // 디스클레이머 동의 체크
+    setupDisclaimerAgreement();
 });
 
 // 모바일 환경 최적화
@@ -54,6 +58,27 @@ function optimizeForMobile() {
                 btn.classList.remove('touch-active');
             }
         }, { passive: true });
+    }
+}
+
+// 디스클레이머 동의 설정
+function setupDisclaimerAgreement() {
+    const disclaimerCheckbox = document.getElementById('disclaimerAgree');
+    const startTestBtn = document.getElementById('startTestBtn');
+    
+    if (disclaimerCheckbox && startTestBtn) {
+        disclaimerCheckbox.addEventListener('change', function() {
+            hasAgreedToDisclaimer = this.checked;
+            startTestBtn.disabled = !this.checked;
+            
+            if (this.checked) {
+                startTestBtn.classList.add('active');
+                startTestBtn.classList.remove('disabled');
+            } else {
+                startTestBtn.classList.remove('active');
+                startTestBtn.classList.add('disabled');
+            }
+        });
     }
 }
 
@@ -124,6 +149,28 @@ function goToStep(stepNumber) {
     
     // 시각적 효과: 단계 변경 시 하이라이트
     highlightCurrentStep();
+    
+    // Step 3에 도달하면 디스클레이머 확인
+    if (stepNumber === 3 && !hasAgreedToDisclaimer) {
+        showDisclaimerReminder();
+    }
+}
+
+// 디스클레이머 리마인더 표시
+function showDisclaimerReminder() {
+    const disclaimerReminder = document.getElementById('disclaimerReminder');
+    if (disclaimerReminder) {
+        disclaimerReminder.style.display = 'block';
+        disclaimerReminder.classList.add('reminder-show');
+        
+        // 5초 후 자동 숨김
+        setTimeout(() => {
+            disclaimerReminder.classList.remove('reminder-show');
+            setTimeout(() => {
+                disclaimerReminder.style.display = 'none';
+            }, 300);
+        }, 5000);
+    }
 }
 
 // 현재 단계 하이라이트
@@ -529,6 +576,12 @@ function setupDirectRecording() {
     startBtn.addEventListener('click', async function() {
         if (isRecording) return;
         
+        // 디스클레이머 동의 확인
+        if (!hasAgreedToDisclaimer) {
+            showDisclaimerAlert();
+            return;
+        }
+        
         // 시각적 효과
         this.classList.add('recording-clicked');
         setTimeout(() => {
@@ -663,6 +716,23 @@ function setupDirectRecording() {
                 }
             }
         });
+    }
+}
+
+// 디스클레이머 알림 표시
+function showDisclaimerAlert() {
+    const alertDiv = document.getElementById('disclaimerAlert');
+    if (alertDiv) {
+        alertDiv.style.display = 'block';
+        alertDiv.classList.add('alert-show');
+        
+        // 3초 후 자동 숨김
+        setTimeout(() => {
+            alertDiv.classList.remove('alert-show');
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 300);
+        }, 3000);
     }
 }
 
@@ -912,9 +982,9 @@ function simulateAnalysis() {
     }, 30);
 }
 
-// 랜덤 결과 생성 (데모용)
+// 랜덤 결과 생성 (데모용) - 신뢰성 개선 버전
 function generateRandomResults() {
-    // ED 레벨 후보들
+    // ED 레벨 후보들 - 신뢰성 개선: 원어민/상급자 감지 로직 추가
     const edLevels = [
         { name: "Pre-Basic", desc: "입문자", cefr: "A1", toeic: "10-119", ielts: "1.0-1.5" },
         { name: "Basic 3", desc: "초급", cefr: "A1", toeic: "120-224", ielts: "2.0-2.5" },
@@ -928,17 +998,39 @@ function generateRandomResults() {
         { name: "Advanced 3", desc: "고급", cefr: "C1", toeic: "945-990", ielts: "7.5-8.0" }
     ];
     
-    // 랜덤 결과 선택 (중간 레벨에 가중치 부여)
-    const weights = [1, 2, 3, 4, 6, 7, 6, 4, 2, 1]; // 중간 레벨에 더 높은 확률
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let random = Math.random() * totalWeight;
+    // 파일명 기반 원어민/상급자 감지 (간단한 버전)
+    let isLikelyNative = false;
+    if (uploadedFile) {
+        const fileName = uploadedFile.name.toLowerCase();
+        // 파일명에 특정 키워드가 있으면 원어민으로 간주 (데모용)
+        const nativeKeywords = ['bbc', 'anchor', 'white house', 'native', 'professional', 'news'];
+        isLikelyNative = nativeKeywords.some(keyword => fileName.includes(keyword));
+    }
     
-    let selectedIndex = 0;
-    for (let i = 0; i < weights.length; i++) {
-        random -= weights[i];
-        if (random <= 0) {
-            selectedIndex = i;
-            break;
+    // 랜덤 결과 선택 로직
+    let selectedIndex;
+    
+    if (isLikelyNative) {
+        // 원어민/상급자 감지 시 최상위 레벨로 고정
+        selectedIndex = edLevels.length - 1; // Advanced 3 (C1)
+        
+        // 원어민 감지 알림 추가
+        setTimeout(() => {
+            showNativeSpeakerNote();
+        }, 1000);
+    } else {
+        // 일반 학습자: 중간 레벨에 가중치 부여
+        const weights = [1, 2, 3, 4, 6, 7, 6, 4, 2, 1];
+        const totalWeight = weights.reduce((a, b) => a + b, 0);
+        let random = Math.random() * totalWeight;
+        
+        selectedIndex = 0;
+        for (let i = 0; i < weights.length; i++) {
+            random -= weights[i];
+            if (random <= 0) {
+                selectedIndex = i;
+                break;
+            }
         }
     }
     
@@ -990,25 +1082,50 @@ function generateRandomResults() {
     
     // Step 5에서 사용할 추천 코스 설정
     let recommendedCourse = "";
+    let courseDuration = "";
+    
     if (result.name.includes("Basic")) {
         recommendedCourse = "Basic Course";
+        courseDuration = "10주 과정";
     } else if (result.name.includes("Intermediate")) {
         recommendedCourse = "Intermediate Course";
+        courseDuration = "12주 과정";
     } else {
         recommendedCourse = "Advanced Course";
+        courseDuration = "16주 과정";
     }
     
     // 로컬 스토리지에 결과 저장 (Step 5에서 사용)
     localStorage.setItem('edDiagnosisResult', JSON.stringify({
         edLevel: result.name,
         recommendedCourse: recommendedCourse,
+        courseDuration: courseDuration,
         cefr: result.cefr,
         toeic: result.toeic,
-        ielts: result.ielts
+        ielts: result.ielts,
+        levelDesc: result.desc,
+        isLikelyNative: isLikelyNative
     }));
 }
 
-// Step 5에서 최종 결과 표시
+// 원어민 감지 알림 표시
+function showNativeSpeakerNote() {
+    const nativeNote = document.getElementById('nativeSpeakerNote');
+    if (nativeNote) {
+        nativeNote.style.display = 'block';
+        nativeNote.classList.add('note-appear');
+        
+        // 10초 후 자동 숨김
+        setTimeout(() => {
+            nativeNote.classList.remove('note-appear');
+            setTimeout(() => {
+                nativeNote.style.display = 'none';
+            }, 300);
+        }, 10000);
+    }
+}
+
+// Step 5에서 최종 결과 표시 - 신뢰성 개선 버전
 function displayFinalResults() {
     const storedResult = localStorage.getItem('edDiagnosisResult');
     
@@ -1018,28 +1135,31 @@ function displayFinalResults() {
         
         if (courseBadge) {
             // 추천 코스 업데이트
-            if (result.edLevel.includes("Basic")) {
-                courseBadge.innerHTML = `
-                    <span class="course-name">Basic Course</span>
-                    <span class="course-duration">10주 과정</span>
-                `;
-            } else if (result.edLevel.includes("Intermediate")) {
-                courseBadge.innerHTML = `
-                    <span class="course-name">Intermediate Course</span>
-                    <span class="course-duration">12주 과정</span>
-                `;
-            } else {
-                courseBadge.innerHTML = `
-                    <span class="course-name">Advanced Course</span>
-                    <span class="course-duration">16주 과정</span>
-                `;
-            }
+            courseBadge.innerHTML = `
+                <span class="course-name">${result.recommendedCourse}</span>
+                <span class="course-duration">${result.courseDuration}</span>
+            `;
             
             courseBadge.classList.add('course-badge-appear');
             
             setTimeout(() => {
                 courseBadge.classList.remove('course-badge-appear');
             }, 1000);
+        }
+        
+        // 원어민/상급자 결과 설명 추가
+        if (result.isLikelyNative) {
+            const resultInterpretation = document.getElementById('resultInterpretation');
+            if (resultInterpretation) {
+                resultInterpretation.style.display = 'block';
+                resultInterpretation.innerHTML = `
+                    <div class="native-speaker-result">
+                        <h4><i class="fas fa-star"></i> 상급자/원어민 감지</h4>
+                        <p>본 테스트는 <strong>초중급~중급 학습자를 위해 설계</strong>되었습니다. 원어민이나 고급 학습자의 경우 결과가 실제 실력을 반영하지 못할 수 있습니다.</p>
+                        <p>ED의 <a href="#" class="advanced-course-link">상급자용 맞춤 코스</a>를 추천드립니다.</p>
+                    </div>
+                `;
+            }
         }
         
         // CTA 버튼 애니메이션
@@ -1087,6 +1207,13 @@ function restartDiagnosis() {
     // 모든 상태 초기화
     currentStep = 1;
     uploadedFile = null;
+    hasAgreedToDisclaimer = false;
+    
+    // 디스클레이머 체크박스 초기화
+    const disclaimerCheckbox = document.getElementById('disclaimerAgree');
+    if (disclaimerCheckbox) {
+        disclaimerCheckbox.checked = false;
+    }
     
     // 녹음 관련 초기화
     if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -1107,6 +1234,8 @@ function restartDiagnosis() {
     const analysisResult = document.getElementById('analysisResult');
     const nextToStep5 = document.getElementById('nextToStep5');
     const progressFill = document.getElementById('progressFill');
+    const nativeNote = document.getElementById('nativeSpeakerNote');
+    const resultInterpretation = document.getElementById('resultInterpretation');
     
     if (analysisProgress) {
         analysisProgress.style.display = 'block';
@@ -1126,6 +1255,15 @@ function restartDiagnosis() {
     if (progressFill) {
         progressFill.style.width = '0%';
         progressFill.classList.remove('progress-complete', 'progress-pulse');
+    }
+    
+    if (nativeNote) {
+        nativeNote.style.display = 'none';
+        nativeNote.classList.remove('note-appear');
+    }
+    
+    if (resultInterpretation) {
+        resultInterpretation.style.display = 'none';
     }
     
     // 프로그레스 바 비활성화
@@ -1249,3 +1387,84 @@ function setupDragDropEffects() {
 
 // 초기화 시 드래그 효과 설정
 setupDragDropEffects();
+
+// 사용자 피드백 제출 함수
+function submitFeedback() {
+    const feedbackText = document.getElementById('feedbackText').value;
+    const feedbackRating = document.querySelector('input[name="feedbackRating"]:checked');
+    
+    if (!feedbackText.trim()) {
+        alert('피드백 내용을 입력해주세요.');
+        return;
+    }
+    
+    // 피드백 데이터 준비
+    const feedbackData = {
+        text: feedbackText,
+        rating: feedbackRating ? feedbackRating.value : 'neutral',
+        timestamp: new Date().toISOString(),
+        currentLevel: localStorage.getItem('edDiagnosisResult') ? JSON.parse(localStorage.getItem('edDiagnosisResult')).edLevel : 'unknown'
+    };
+    
+    // 실제 서비스에서는 서버로 전송
+    console.log('피드백 제출:', feedbackData);
+    
+    // 시각적 효과
+    const feedbackBtn = document.getElementById('submitFeedbackBtn');
+    if (feedbackBtn) {
+        feedbackBtn.innerHTML = '<i class="fas fa-check"></i> 제출 완료';
+        feedbackBtn.classList.add('submitted');
+        feedbackBtn.disabled = true;
+        
+        setTimeout(() => {
+            feedbackBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 피드백 제출';
+            feedbackBtn.classList.remove('submitted');
+            feedbackBtn.disabled = false;
+            
+            // 폼 초기화
+            document.getElementById('feedbackText').value = '';
+            const feedbackForm = document.getElementById('feedbackForm');
+            if (feedbackForm) {
+                feedbackForm.reset();
+            }
+            
+            // 감사 메시지
+            alert('소중한 피드백 감사합니다! 시스템 개선에 참고하겠습니다.');
+        }, 2000);
+    }
+}
+
+// 결과 공유 함수
+function shareResult() {
+    const result = localStorage.getItem('edDiagnosisResult');
+    if (!result) return;
+    
+    const resultData = JSON.parse(result);
+    const shareText = `🎯 영어 레벨 진단 결과: ${resultData.edLevel} (CEFR ${resultData.cefr})\n\n📊 추정 점수:\n• TOEIC: ${resultData.toeic}\n• IELTS: ${resultData.ielts}\n\n📚 추천 과정: ${resultData.recommendedCourse}\n\n#EnglishDiscoveries #영어레벨진단`;
+    
+    // 클립보드에 복사
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('결과가 클립보드에 복사되었습니다!');
+        }).catch(err => {
+            console.error('클립보드 복사 실패:', err);
+            // 대체 방법
+            const textarea = document.createElement('textarea');
+            textarea.value = shareText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('결과가 클립보드에 복사되었습니다!');
+        });
+    } else {
+        // 대체 방법
+        const textarea = document.createElement('textarea');
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('결과가 클립보드에 복사되었습니다!');
+    }
+}
