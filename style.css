@@ -1,30 +1,85 @@
+/* ===== CSS 개선 버전 ===== */
 
-/* 기본 스타일 리셋 및 설정 */
+/* 1. 컬러 시스템 변수화 */
+:root {
+    --primary-blue: #1a5fb4;
+    --primary-blue-light: #2c8cff;
+    --primary-gradient: linear-gradient(135deg, #1a5fb4 0%, #2c8cff 100%);
+    --success-color: #22c55e;
+    --success-dark: #16a34a;
+    --danger-color: #ff4757;
+    --danger-light: #ff6b81;
+    --warning-color: #f59e0b;
+    --info-color: #8b5cf6;
+    --gray-light: #f8f9fa;
+    --gray-medium: #e0e0e0;
+    --gray-dark: #333;
+    --text-light: #666;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-blue: rgba(44, 140, 255, 0.1);
+    --transition-default: all 0.3s ease;
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* 2. 리셋 및 기본 설정 개선 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f8f9fa;
+    color: var(--gray-dark);
+    background-color: var(--gray-light);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+/* 3. 공통 컴포넌트 스타일 */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* 헤더 스타일 */
+.section-title {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+}
+
+/* 4. 헤더 개선 */
 .header {
-    background: linear-gradient(135deg, #1a5fb4 0%, #2c8cff 100%);
+    background: var(--primary-gradient);
     color: white;
     padding: 1.2rem 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px var(--shadow-light);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    background-color: rgba(26, 95, 180, 0.95);
 }
 
 .header .container {
@@ -37,16 +92,23 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    transition: var(--transition-default);
+}
+
+.logo:hover {
+    transform: translateY(-2px);
 }
 
 .logo img {
     height: 50px;
     width: auto;
+    border-radius: 8px;
 }
 
 .logo h1 {
     font-size: 1.8rem;
     font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .logo span {
@@ -65,32 +127,51 @@ body {
     text-decoration: none;
     font-weight: 500;
     font-size: 1.05rem;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: var(--transition-default);
+    position: relative;
+    overflow: hidden;
 }
 
-.nav a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.nav a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
 }
 
-/* 진행 단계 표시기 */
+.nav a:hover::before {
+    width: 100%;
+}
+
+.nav a.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 5. 진행 단계 표시기 개선 */
 .progress-steps {
     display: flex;
     justify-content: space-between;
     margin: 2.5rem 0;
     position: relative;
+    padding: 0 20px;
 }
 
 .progress-steps::before {
     content: '';
     position: absolute;
-    top: 20px;
-    left: 10%;
-    right: 10%;
+    top: 22px;
+    left: calc(10% + 20px);
+    right: calc(10% + 20px);
     height: 4px;
-    background-color: #e0e0e0;
+    background-color: var(--gray-medium);
     z-index: 1;
+    border-radius: 2px;
 }
 
 .step {
@@ -103,26 +184,43 @@ body {
 }
 
 .step-number {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background-color: #e0e0e0;
+    background-color: white;
     color: #777;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 1.2rem;
-    margin-bottom: 10px;
-    transition: all 0.3s;
-    border: 4px solid white;
-    box-shadow: 0 0 0 2px #e0e0e0;
+    margin-bottom: 12px;
+    transition: var(--transition-default);
+    border: 3px solid var(--gray-medium);
+    box-shadow: 0 2px 5px var(--shadow-light);
+    cursor: pointer;
+}
+
+.step-number:hover {
+    transform: scale(1.1);
 }
 
 .step.active .step-number {
-    background-color: #2c8cff;
+    background-color: var(--primary-blue-light);
     color: white;
-    box-shadow: 0 0 0 2px #2c8cff;
+    border-color: var(--primary-blue-light);
+    box-shadow: 0 0 0 4px rgba(44, 140, 255, 0.2);
+}
+
+.step.completed .step-number {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+    font-size: 1.4rem;
 }
 
 .step-label {
@@ -130,32 +228,51 @@ body {
     text-align: center;
     color: #777;
     font-weight: 500;
-    max-width: 100px;
+    max-width: 120px;
+    line-height: 1.3;
 }
 
 .step.active .step-label {
-    color: #2c8cff;
+    color: var(--primary-blue-light);
     font-weight: 600;
 }
 
-/* 단계 콘텐츠 */
+/* 6. 단계 콘텐츠 애니메이션 개선 */
 .step-content {
     display: none;
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     padding: 2.5rem;
     margin-bottom: 2rem;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .step-content.active {
     display: block;
-    animation: fadeIn 0.5s ease;
+    animation: fadeInUp 0.6s ease;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .step-header {
@@ -165,1395 +282,531 @@ body {
 }
 
 .step-header h2 {
-    color: #1a5fb4;
+    color: var(--primary-blue);
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-header h2::before {
+    content: '';
+    width: 30px;
+    height: 4px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
 }
 
 .step-header p {
-    color: #666;
+    color: var(--text-light);
     font-size: 1.1rem;
+    line-height: 1.6;
 }
 
-/* 버튼 스타일 */
+/* 7. 버튼 시스템 개선 */
 .btn {
-    padding: 12px 24px;
-    border-radius: 6px;
+    padding: 14px 28px;
+    border-radius: 8px;
     border: none;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: var(--transition-default);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    min-height: 48px;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--shadow-light);
 }
 
-.prev-btn {
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.btn-secondary {
     background-color: #f0f0f0;
     color: #555;
 }
 
-.prev-btn:hover {
+.btn-secondary:hover {
     background-color: #e0e0e0;
 }
 
-.next-btn {
-    background-color: #2c8cff;
+.btn-success {
+    background: linear-gradient(135deg, var(--success-color), var(--success-dark));
     color: white;
 }
 
-.next-btn:hover {
-    background-color: #1a5fb4;
-}
-
-.analyze-btn {
-    background-color: #22c55e;
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-color), var(--danger-light));
     color: white;
 }
 
-.analyze-btn:hover {
-    background-color: #16a34a;
+.btn-info {
+    background: linear-gradient(135deg, var(--info-color), #7c3aed);
+    color: white;
 }
 
-.analyze-btn:disabled {
-    background-color: #cccccc;
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-blue-light);
+    color: var(--primary-blue-light);
+}
+
+.btn-outline:hover {
+    background: var(--primary-blue-light);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
-.ed-link-btn {
-    background-color: #8b5cf6;
-    color: white;
-    text-decoration: none;
-    margin-top: 1rem;
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    min-height: 36px;
 }
 
-.cta-primary {
-    background-color: #2c8cff;
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-    padding: 15px 30px;
+.btn-lg {
+    padding: 18px 36px;
+    font-size: 1.2rem;
+    min-height: 56px;
 }
 
-.cta-secondary {
-    background-color: #f0f0f0;
-    color: #333;
-    text-decoration: none;
-    padding: 15px 30px;
+/* 8. 카드 컴포넌트 */
+.card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+    transition: var(--transition-default);
 }
 
-.cta-tertiary {
-    background-color: transparent;
-    color: #2c8cff;
-    border: 2px solid #2c8cff;
-    padding: 13px 30px;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* Step 1: ED School 정보 */
-.ed-school-info {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2.5rem;
-    align-items: center;
-    margin-bottom: 2.5rem;
+.card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
 }
 
-.ed-logo img {
-    max-width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.ed-description h3 {
-    color: #1a5fb4;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
-
-.ed-description ul {
-    margin: 1rem 0 1.5rem 1.5rem;
-}
-
-.ed-description li {
+.card-title {
+    color: var(--primary-blue);
+    font-size: 1.4rem;
     margin-bottom: 0.5rem;
 }
 
-/* Step 2: 스피킹 맥스 지침 */
-.speaking-instructions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
+/* 9. 폼 요소 개선 */
+.form-group {
+    margin-bottom: 1.5rem;
 }
 
-.instruction-card {
-    background-color: #f8fafc;
-    border-radius: 10px;
-    padding: 1.8rem;
-    border-left: 5px solid #2c8cff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
-
-.instruction-icon {
-    font-size: 2.5rem;
-    color: #2c8cff;
-    margin-bottom: 1rem;
-}
-
-.instruction-card h3 {
-    color: #1a5fb4;
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
-}
-
-.instruction-card ol, .instruction-card ul {
-    padding-left: 1.2rem;
-}
-
-.instruction-card li {
-    margin-bottom: 0.7rem;
-}
-
-.sample-recording {
-    background-color: #f0f7ff;
-    border-radius: 10px;
-    padding: 1.8rem;
-    margin-bottom: 2rem;
-}
-
-.sample-recording h3 {
-    color: #1a5fb4;
-    margin-bottom: 1rem;
-}
-
-.audio-note {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.8rem;
-    font-style: italic;
-}
-
-/* Step 3: 업로드 영역 */
-/* Step 3 비주얼 개선 */
-
-/* 방법 선택 탭 스타일 */
-.method-tabs {
-    display: flex;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    padding: 8px;
-    margin-bottom: 2rem;
-    border: 2px solid #e9ecef;
-}
-
-.method-tab {
-    flex: 1;
-    padding: 18px 20px;
-    border: none;
-    background: none;
-    font-size: 1.1rem;
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #6c757d;
-    cursor: pointer;
+    color: var(--gray-dark);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-medium);
     border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition-default);
+    background-color: white;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-blue-light);
+    box-shadow: 0 0 0 3px rgba(44, 140, 255, 0.1);
+}
+
+.form-control::placeholder {
+    color: #999;
+}
+
+/* 10. 토스트 메시지 */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
+    gap: 12px;
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+    max-width: 400px;
 }
 
-.method-tab:hover {
-    background-color: #e9ecef;
-    color: #495057;
+.toast-success {
+    border-left: 4px solid var(--success-color);
 }
 
-.method-tab.active {
-    background-color: white;
-    color: #2c8cff;
-    box-shadow: 0 4px 12px rgba(44, 140, 255, 0.15);
-    border: 2px solid #2c8cff;
-    transform: translateY(-2px);
+.toast-error {
+    border-left: 4px solid var(--danger-color);
 }
 
-/* 모바일 가이드 */
-.mobile-guide {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border-left: 5px solid #2c8cff;
-    animation: slideIn 0.5s ease;
+.toast-info {
+    border-left: 4px solid var(--primary-blue-light);
 }
 
-@keyframes slideIn {
+@keyframes slideInRight {
     from {
+        transform: translateX(100%);
         opacity: 0;
-        transform: translateY(10px);
     }
     to {
+        transform: translateX(0);
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
-.guide-content h4 {
-    color: #1565c0;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.guide-content p {
-    color: #0d47a1;
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-/* 방법 섹션 */
-.method-section {
-    display: none;
-    animation: fadeIn 0.5s ease;
-}
-
-.method-section.active {
-    display: block;
-}
-
-.method-section h3 {
-    color: #1a5fb4;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 0.8rem;
-    border-bottom: 2px solid #f0f7ff;
-}
-
-/* 녹음 지침 */
-.recording-instructions {
-    background-color: #f8fbff;
-    border-radius: 12px;
-    padding: 1.8rem;
-    margin-bottom: 2rem;
-    border: 2px solid #d1e7ff;
-}
-
-.recording-instructions ol {
-    padding-left: 1.5rem;
-    margin: 0;
-}
-
-.recording-instructions li {
-    margin-bottom: 1rem;
-    padding-left: 0.5rem;
-    color: #333;
-    font-size: 1.05rem;
-    line-height: 1.6;
-}
-
-.recording-instructions li:last-child {
-    margin-bottom: 0;
-}
-
-/* 녹음 컨트롤 - 개선된 디자인 */
-.recording-controls {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
-    border-radius: 16px;
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    border: 3px solid #e3f2fd;
-    box-shadow: 0 8px 25px rgba(44, 140, 255, 0.1);
-}
-
-/* 녹음 시작 버튼 - 눈에 띄게 개선 */
-.btn-record {
-    background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
-    color: white;
-    border: none;
-    padding: 22px 40px;
-    font-size: 1.4rem;
-    font-weight: 700;
-    border-radius: 50px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-record:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(255, 71, 87, 0.4);
-    background: linear-gradient(135deg, #ff3838 0%, #ff5252 100%);
-}
-
-.btn-record:active {
-    transform: translateY(-2px);
-}
-
-.btn-record::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: linear-gradient(45deg, 
-        rgba(255, 71, 87, 0.1) 0%,
-        rgba(255, 107, 129, 0.1) 50%,
-        rgba(255, 71, 87, 0.1) 100%);
-    border-radius: 60px;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(0.95);
-        opacity: 0.7;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.3;
-    }
-    100% {
-        transform: scale(0.95);
-        opacity: 0.7;
-    }
-}
-
-.btn-record i {
-    font-size: 1.6rem;
-    animation: microphonePulse 1.5s infinite;
-}
-
-@keyframes microphonePulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-}
-
-/* 녹음 상태 표시 */
-.recording-status {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    background-color: rgba(255, 71, 87, 0.05);
-    border-radius: 12px;
-    border: 2px solid rgba(255, 71, 87, 0.2);
-}
-
-.recording-indicator {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #ff4757;
-}
-
-/* 빨간 점 표시기 - 눈에 띄는 디자인 */
-.recording-dot {
-    width: 24px;
-    height: 24px;
-    background-color: #ff4757;
+/* 11. 로딩 스피너 */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-blue-light);
     border-radius: 50%;
-    animation: recordingBlink 1s infinite;
-    box-shadow: 0 0 15px rgba(255, 71, 87, 0.7);
-    position: relative;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
 }
 
-.recording-dot::after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    background-color: rgba(255, 71, 87, 0.3);
-    border-radius: 50%;
-    animation: recordingPulse 1.5s infinite;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-@keyframes recordingBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-@keyframes recordingPulse {
-    0% {
-        transform: scale(0.8);
-        opacity: 0.7;
-    }
-    70% {
-        transform: scale(1.5);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-}
-
-#recordTimer {
-    font-family: 'Courier New', monospace;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 700;
-    min-width: 80px;
-    text-align: center;
-}
-
-/* 녹음 중지 버튼 */
-.btn-stop {
-    background: linear-gradient(135deg, #2c8cff 0%, #1a5fb4 100%);
-    color: white;
-    border: none;
-    padding: 18px 35px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    border-radius: 50px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(44, 140, 255, 0.3);
-}
-
-.btn-stop:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(44, 140, 255, 0.4);
-}
-
-/* 녹음 팁 */
-.recording-tips {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    border-left: 4px solid #2c8cff;
-}
-
-.recording-tips p {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 0.8rem;
-    color: #495057;
-    font-size: 1.05rem;
-}
-
-.recording-tips i {
-    color: #2c8cff;
-    font-size: 1.1rem;
-    min-width: 20px;
-}
-
-/* 파일 업로드 섹션 개선 */
+/* 12. 파일 업로드 영역 개선 */
 .upload-area {
-    border: 3px dashed #2c8cff;
-    border-radius: 20px;
+    border: 3px dashed var(--primary-blue-light);
+    border-radius: var(--border-radius-lg);
     padding: 3rem 2rem;
     text-align: center;
     background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: var(--transition-default);
 }
 
-.upload-area:hover, .upload-area.dragover {
-    border-color: #1a5fb4;
+.upload-area.dragover {
+    border-color: var(--primary-blue);
     background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(26, 95, 180, 0.15);
 }
 
-.upload-area::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent 30%, 
-        rgba(255, 255, 255, 0.3) 50%, 
-        transparent 70%);
-    animation: shine 3s infinite linear;
-    pointer-events: none;
+.upload-area.dragover .upload-icon {
+    transform: scale(1.1);
+    color: var(--primary-blue);
 }
 
-@keyframes shine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-.upload-icon {
-    font-size: 4.5rem;
-    color: #2c8cff;
-    margin-bottom: 1.5rem;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.upload-area h4 {
-    color: #1a5fb4;
-    font-size: 1.6rem;
-    margin-bottom: 0.8rem;
-    font-weight: 700;
-}
-
-.upload-area p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-}
-
-/* 파일 선택 버튼 - 눈에 띄게 개선 */
-.btn-upload {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    color: white;
-    border: none;
-    padding: 20px 40px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    border-radius: 50px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+/* 13. 툴팁 */
+.tooltip {
     position: relative;
-    overflow: hidden;
-}
-
-.btn-upload:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(34, 197, 94, 0.4);
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-}
-
-.btn-upload::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.2), 
-        transparent);
-    transition: left 0.5s;
-}
-
-.btn-upload:hover::before {
-    left: 100%;
-}
-
-/* 파일 정보 표시 */
-.file-info {
-    margin-top: 2rem;
-}
-
-.file-success {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border: 2px solid #34d399;
-    animation: slideIn 0.5s ease;
-}
-
-.file-icon {
-    font-size: 2.5rem;
-    color: #10b981;
-}
-
-.file-details {
-    flex: 1;
-    text-align: left;
-}
-
-.file-name {
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #065f46;
-    margin-bottom: 0.5rem;
-    word-break: break-all;
-}
-
-.file-meta {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.file-meta span {
-    padding: 4px 12px;
-    background-color: white;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.file-size {
-    color: #047857;
-    border: 1px solid #a7f3d0;
-}
-
-.file-type {
-    color: #7c3aed;
-    border: 1px solid #ddd6fe;
-}
-
-.file-status {
-    color: #059669;
-    border: 1px solid #6ee7b7;
-}
-
-.btn-remove {
-    background: none;
-    border: none;
-    color: #ef4444;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.3s;
-}
-
-.btn-remove:hover {
-    background-color: rgba(239, 68, 68, 0.1);
-    transform: rotate(90deg);
-}
-
-/* 파일 오류 메시지 */
-.file-error {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    border: 2px solid #f87171;
-    animation: shake 0.5s ease;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-5px); }
-    40%, 80% { transform: translateX(5px); }
-}
-
-.error-content {
-    display: flex;
-    gap: 20px;
-}
-
-.error-icon {
-    font-size: 2.5rem;
-    color: #dc2626;
-}
-
-.error-text h4 {
-    color: #991b1b;
-    margin-bottom: 0.8rem;
-    font-size: 1.3rem;
-}
-
-.error-message {
-    color: #7f1d1d;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 1rem;
-    border-radius: 8px;
-    border-left: 4px solid #dc2626;
-}
-
-.error-solutions h5 {
-    color: #991b1b;
-    margin-bottom: 0.8rem;
-    font-size: 1.1rem;
-}
-
-.error-solutions ul {
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.error-solutions li {
-    color: #7f1d1d;
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-.conversion-links {
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-
-.conversion-links p {
-    color: #7f1d1d;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.conversion-links a {
-    display: block;
-    color: #2563eb;
-    text-decoration: none;
-    padding: 4px 0;
-    transition: color 0.3s;
-}
-
-.conversion-links a:hover {
-    color: #1d4ed8;
-    text-decoration: underline;
-}
-
-/* 파일 가이드 */
-.file-guide {
-    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-    border-radius: 12px;
-    padding: 1.8rem;
-    margin: 1.5rem 0;
-    border: 2px solid #7dd3fc;
-}
-
-.file-guide h4 {
-    color: #0369a1;
-    margin-bottom: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.2rem;
-}
-
-.guide-tips {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.tip {
-    background-color: white;
-    padding: 1.2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.tip strong {
-    display: block;
-    color: #0c4a6e;
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.tip p {
-    color: #475569;
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* 업로드 요구사항 */
-.upload-requirements {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-radius: 12px;
-    padding: 1.8rem;
-    margin: 1.5rem 0;
-    border: 2px solid #e2e8f0;
-}
-
-.upload-requirements h4 {
-    color: #475569;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.2rem;
-}
-
-.upload-requirements ul {
-    padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.upload-requirements li {
-    color: #64748b;
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-.privacy-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    background-color: #dbeafe;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-}
-
-.privacy-notice i {
-    color: #2563eb;
-    font-size: 1.3rem;
-    margin-top: 2px;
-}
-
-.privacy-notice p {
-    color: #1e40af;
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-/* 분석 버튼 */
-.analyze-btn {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-    padding: 18px 35px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-
-.analyze-btn:hover:not(:disabled) {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(139, 92, 246, 0.4);
-    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-}
-
-.analyze-btn:disabled {
-    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-    .method-tabs {
-        flex-direction: column;
-    }
-    
-    .method-tab {
-        padding: 16px;
-        font-size: 1rem;
-    }
-    
-    .btn-record, .btn-upload {
-        padding: 18px 30px;
-        font-size: 1.2rem;
-        width: 100%;
-    }
-    
-    .recording-controls {
-        padding: 1.8rem;
-    }
-    
-    .upload-area {
-        padding: 2rem 1.5rem;
-    }
-    
-    .guide-tips {
-        grid-template-columns: 1fr;
-    }
-    
-    .file-meta {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .file-meta span {
-        display: inline-block;
-    }
-}
-
-/* Step 4: AI 분석 진행 */
-.analysis-progress, .analysis-result {
-    margin-bottom: 2.5rem;
-}
-
-.progress-bar {
-    height: 12px;
-    background-color: #e0e0e0;
-    border-radius: 6px;
-    margin: 1.5rem 0;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #2c8cff, #22c55e);
-    border-radius: 6px;
-    width: 0%;
-    transition: width 0.5s ease;
-}
-
-.progress-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-
-.stat {
-    text-align: center;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-}
-
-.stat-label {
-    display: block;
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
-
-.stat-value {
-    display: block;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: #1a5fb4;
-}
-
-/* 결과 카드 */
-.result-card {
-    background: linear-gradient(135deg, #f8fbff 0%, #e8f4ff 100%);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 2px solid #b3d4ff;
-}
-
-.result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #d1e7ff;
-}
-
-.ed-level-badge {
-    background-color: #2c8cff;
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-weight: 700;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.level-name {
-    font-size: 1.3rem;
-}
-
-.level-desc {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.result-details {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.result-item {
-    text-align: center;
-    padding: 1.2rem;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-}
-
-.result-label {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 0.5rem;
-}
-
-.result-value {
-    font-weight: 700;
-    font-size: 1.4rem;
-}
-
-.cefr-b1 {
-    color: #f59e0b;
-    background-color: #fef3c7;
-    padding: 5px 15px;
-    border-radius: 20px;
     display: inline-block;
 }
 
-.result-notice {
-    background-color: #fff8e6;
-    border-left: 5px solid #f59e0b;
-    padding: 1rem;
-    border-radius: 0 8px 8px 0;
-}
-
-.result-notice p {
-    margin: 0;
-    color: #856404;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-
-/* 세부 분석 */
-.detailed-analysis {
-    background-color: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
-
-.analysis-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.analysis-item {
-    padding: 1.2rem;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-}
-
-.analysis-label {
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    color: #333;
-}
-
-.analysis-score {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.score-bar {
-    flex-grow: 1;
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.score-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #2c8cff, #8b5cf6);
-    border-radius: 5px;
-}
-
-.score-value {
-    font-weight: 700;
-    color: #1a5fb4;
-    min-width: 60px;
-}
-
-/* Step 5: 수강 유도 */
-.course-recommendation {
-    margin-bottom: 2rem;
-}
-
-.recommendation-card {
-    background: linear-gradient(135deg, #f8fbff 0%, #e8f4ff 100%);
-    border-radius: 12px;
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    border: 2px solid #b3d4ff;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem;
-}
-
-.course-level h3 {
-    color: #1a5fb4;
-    margin-bottom: 1.5rem;
-}
-
-.course-badge {
-    background-color: #2c8cff;
-    color: white;
-    padding: 1rem;
-    border-radius: 10px;
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
     text-align: center;
-}
-
-.course-name {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.course-duration {
-    display: block;
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.course-details h4 {
-    color: #1a5fb4;
-    margin-bottom: 1rem;
-}
-
-.course-details ul {
-    margin-left: 1.5rem;
-}
-
-.course-details li {
-    margin-bottom: 0.7rem;
-}
-
-.cta-section {
-    text-align: center;
-    padding: 2.5rem;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    margin-bottom: 2rem;
-}
-
-.cta-section h3 {
-    color: #1a5fb4;
-    font-size: 1.8rem;
-    margin-bottom: 0.8rem;
-}
-
-.cta-section p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-}
-
-.cta-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 2rem;
-}
-
-.final-notice {
-    background-color: #fff8e6;
-    border-radius: 12px;
-    padding: 2rem;
-    border: 2px solid #f59e0b;
-}
-
-.final-notice h4 {
-    color: #b45309;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1.2rem;
-}
-
-.notice-content p {
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-    position: relative;
-}
-
-.notice-content p::before {
-    content: "•";
+    border-radius: 6px;
+    padding: 8px;
     position: absolute;
-    left: 0;
-    color: #b45309;
-    font-weight: bold;
-}
-
-/* 호환성 차트 아코디언 */
-.compatibility-accordion {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-}
-
-.accordion-header {
-    background-color: #2c8cff;
-    color: white;
-    padding: 1.2rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s;
-}
-
-.accordion-header:hover {
-    background-color: #1a5fb4;
-}
-
-.accordion-header h2 {
-    margin: 0;
-    font-size: 1.4rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.accordion-icon {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
-}
-
-.accordion-content.expanded {
-    max-height: 2000px;
-}
-
-/* 푸터 */
-.footer {
-    background-color: #1a202c;
-    color: #cbd5e0;
-    padding: 2.5rem 0;
-    margin-top: 4rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 2rem;
-    align-items: center;
-}
-
-.footer-info p {
-    margin-bottom: 0.5rem;
-}
-
-.copyright {
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
     font-size: 0.9rem;
-    color: #a0aec0;
-    margin-top: 1rem;
+    line-height: 1.4;
 }
 
-.footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
 
-.footer-links a {
-    color: #cbd5e0;
-    text-decoration: none;
-    transition: color 0.3s;
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
 }
 
-.footer-links a:hover {
-    color: white;
+/* 14. 스크롤바 스타일링 */
+::-webkit-scrollbar {
+    width: 10px;
 }
 
-/* 반응형 디자인 */
-@media (max-width: 992px) {
-    .ed-school-info,
-    .speaking-instructions,
-    .result-details,
-    .analysis-grid,
-    .recommendation-card {
-        grid-template-columns: 1fr;
-    }
-    
-    .progress-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
 }
 
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-blue-light), var(--primary-blue));
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+}
+
+/* 15. 반응형 디자인 개선 */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
     .header .container {
         flex-direction: column;
         gap: 15px;
+        text-align: center;
     }
     
     .logo {
         flex-direction: column;
-        text-align: center;
-        gap: 10px;
+        gap: 8px;
+    }
+    
+    .logo img {
+        height: 40px;
+    }
+    
+    .logo h1 {
+        font-size: 1.5rem;
     }
     
     .nav {
-        gap: 15px;
+        gap: 10px;
         flex-wrap: wrap;
         justify-content: center;
     }
     
-    .progress-steps::before {
-        display: none;
-    }
-    
-    .progress-steps {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-    }
-    
-    .step {
-        flex: 0 0 auto;
-        margin: 0 10px;
+    .nav a {
+        padding: 6px 12px;
+        font-size: 0.95rem;
     }
     
     .step-content {
         padding: 1.5rem;
     }
     
-    .cta-buttons {
-        flex-direction: column;
-        align-items: stretch;
+    .step-header h2 {
+        font-size: 1.5rem;
     }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    
+    .progress-steps {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 0;
+    }
+    
+    .progress-steps::before {
+        display: none;
+    }
+    
+    .step {
+        flex: 0 0 calc(50% - 10px);
+        margin-bottom: 15px;
+    }
+    
+    .upload-area {
+        padding: 2rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .step {
+        flex: 0 0 100%;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .step-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .card {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* 16. 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --gray-light: #1a1a1a;
+        --gray-dark: #f0f0f0;
+        --text-light: #b0b0b0;
+    }
+    
+    body {
+        background-color: #121212;
+        color: var(--gray-dark);
+    }
+    
+    .step-content,
+    .card {
+        background-color: #2d2d2d;
+        color: var(--gray-dark);
+    }
+    
+    .form-control {
+        background-color: #3d3d3d;
+        border-color: #555;
+        color: var(--gray-dark);
+    }
+    
+    .upload-area {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+}
+
+/* 17. 인쇄 스타일 */
+@media print {
+    .header,
+    .nav,
+    .btn,
+    .upload-area,
+    .progress-steps {
+        display: none !important;
+    }
+    
+    .step-content {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}
+
+/* 18. 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 19. 하이라이트 컬러 */
+::selection {
+    background-color: rgba(44, 140, 255, 0.3);
+    color: inherit;
+}
+
+/* 20. 푸터 스타일 개선 */
+.footer {
+    background-color: #1a202c;
+    color: #cbd5e0;
+    padding: 3rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-links a {
+    color: #cbd5e0;
+    text-decoration: none;
+    transition: color 0.3s;
+    padding: 4px 0;
+}
+
+.footer-links a:hover {
+    color: white;
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #2d3748;
+    color: #a0aec0;
+    font-size: 0.9rem;
 }
